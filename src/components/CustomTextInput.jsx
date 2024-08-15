@@ -1,5 +1,11 @@
-import { View, StyleSheet } from "react-native";
-import React from "react";
+import React, { useState } from "react";
+import {
+  View,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Text,
+} from "react-native";
 import {
   moderateScale,
   moderateVerticalScale,
@@ -7,8 +13,8 @@ import {
   verticalScale,
 } from "react-native-size-matters";
 import { BG_COLOR } from "../utils/colors";
-import { TextInput } from "react-native-gesture-handler";
 import CustomText from "../utils/CustomText";
+
 const CustomTextInput = ({
   title,
   placeholder,
@@ -17,25 +23,42 @@ const CustomTextInput = ({
   error,
   onChangeText,
 }) => {
+  const [secureTextEntry, setSecureTextEntry] = useState(
+    type === "password" ? true : false
+  );
+
+  const toggleSecureEntry = () => {
+    setSecureTextEntry(!secureTextEntry);
+  };
+
   const errorStyle = error ? { borderColor: "red", borderWidth: 1.2 } : {};
   const errorTitle = error ? { color: "red" } : {};
+
   return (
     <View style={[styles.inputContainer, errorStyle]}>
       <CustomText style={[styles.inputTitle, errorTitle]}>{title}</CustomText>
       <TextInput
-        style={[styles.inputText]}
+        style={[styles.inputText, { flexGrow: 1 }]}
         placeholder={placeholder}
-        secureTextEntry={type === "password" ? true : false}
+        secureTextEntry={secureTextEntry}
         value={value}
         onChangeText={onChangeText}
-      ></TextInput>
+      />
+      {type === "password" && value && (
+        <TouchableOpacity onPress={toggleSecureEntry} style={styles.showButton}>
+          <Text style={styles.showButtonText}>
+            {secureTextEntry ? "Show" : "Hide"}
+          </Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
 
-export default CustomTextInput;
 const styles = StyleSheet.create({
   inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
     width: "90%",
     height: verticalScale(40),
     borderWidth: 0.5,
@@ -45,20 +68,30 @@ const styles = StyleSheet.create({
     borderRadius: scale(10),
     paddingLeft: moderateScale(12),
     paddingRight: moderateScale(12),
-    justifyContent: "center",
   },
   inputTitle: {
-    alignSelf: "flex-start",
-    top: -moderateVerticalScale(9),
     position: "absolute",
-    marginLeft: moderateVerticalScale(25),
+    top: -moderateVerticalScale(9),
+    left: moderateScale(13),
     backgroundColor: BG_COLOR,
-    paddingLeft: moderateVerticalScale(10),
-    paddingRight: moderateVerticalScale(10),
-    fontSize: moderateScale(12),
+    paddingHorizontal: moderateScale(5),
+    fontSize: moderateScale(13),
   },
   inputText: {
-    fontSize: scale(10.7),
+    flex: 1,
+    textAlign: "left",
+    marginRight: moderateScale(15),
+    marginLeft: moderateScale(5),
+    fontSize: moderateScale(13),
     fontFamily: "Poppins_400Regular",
   },
+  showButton: {
+    paddingLeft: moderateScale(10),
+  },
+  showButtonText: {
+    fontSize: moderateScale(12),
+    color: "#007AFF",
+  },
 });
+
+export default CustomTextInput;

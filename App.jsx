@@ -1,7 +1,7 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import MainNavigator from "./src/navigation/MainNavigator";
-import Toast, { BaseToast, ErrorToast } from "react-native-toast-message";
+import Toast from "react-native-toast-message";
 import {
   useFonts,
   Poppins_400Regular,
@@ -17,13 +17,13 @@ const App = () => {
   });
 
   if (!fontsLoaded) {
-    return <CustomText>Loading...</CustomText>;
+    return <Text>Loading...</Text>;
   }
 
   return (
     <View style={styles.container}>
       <MainNavigator />
-      <Toast ref={(ref) => Toast.setRef(ref)} />
+      {/* <Toast ref={(ref) => Toast.setRef(ref)} /> */}
     </View>
   );
 };
@@ -31,7 +31,7 @@ const App = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: BG_COLOR, // Make sure BG_COLOR is valid
+    backgroundColor: BG_COLOR,
   },
 });
 

@@ -34,6 +34,5 @@ const styles = StyleSheet.create({
     fontSize: moderateScale(16),
     alignSelf: "center",
     fontWeight: "600",
-    fontFamily: "",
   },
 });
