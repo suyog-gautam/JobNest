@@ -14,6 +14,8 @@ import CustomBorderBtn from "../../components/CustomBorderBtn";
 import CustomText from "../../utils/CustomText";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import auth from "@react-native-firebase/auth";
+
 const emailRegex =
   /^([A-Z0-9_+-]+\.?)*[A-Z0-9_+-]@([A-Z0-9][A-Z0-9-]*\.)+[A-Z]{2,}$/i;
 
@@ -28,12 +30,27 @@ const SignUpForCompany = ({ navigation }) => {
     address: Yup.string().required("Address is required"),
     email: Yup.string()
       .email("Please enter a valid email ")
-      .matches(emailRegex, "PLease enter a valid email")
+      .matches(emailRegex, "Please enter a valid email")
       .required("Email is required"),
     password: Yup.string()
       .required("Password is required")
       .min(6, "Password must be at least 6 characters long"), // More descriptive
   });
+
+  const handleSignUp = async (values, { setSubmitting }) => {
+    try {
+      await auth().createUserWithEmailAndPassword(
+        values.email,
+        values.password
+      );
+      Alert.alert("Success", "You have signed up successfully!");
+      navigation.navigate("LoginForCompany");
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -51,14 +68,7 @@ const SignUpForCompany = ({ navigation }) => {
             password: "",
           }}
           validationSchema={validationSchema}
-          onSubmit={(values) => {
-            Toast.show({
-              type: "success",
-              position: "bottom",
-              text1: "Ready to Send Data",
-            });
-            console.log(values);
-          }}
+          onSubmit={handleSignUp}
         >
           {({
             handleChange,
@@ -67,6 +77,7 @@ const SignUpForCompany = ({ navigation }) => {
             values,
             errors,
             touched,
+            isSubmitting,
           }) => (
             <>
               <CustomTextInput
@@ -144,7 +155,11 @@ const SignUpForCompany = ({ navigation }) => {
                   {errors.password}
                 </CustomText>
               ) : null}
-              <CustomSolidBtn title="Create Account" onPress={handleSubmit} />
+              <CustomSolidBtn
+                title="Create Account"
+                onPress={handleSubmit}
+                disabled={isSubmitting}
+              />
               <CustomBorderBtn
                 title="Login"
                 onPress={() => navigation.navigate("LoginForCompany")}

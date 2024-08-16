@@ -33,3 +33,6 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+#Firebase Api keys
+GoogleService-Info.plist
+google-services.json
