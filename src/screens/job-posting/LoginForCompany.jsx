@@ -1,7 +1,8 @@
-import React from "react";
-import { View, Image, TouchableOpacity, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Image, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import Toast from "react-native-toast-message";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import {
   scale,
   moderateScale,
@@ -14,9 +15,26 @@ import CustomText from "../../utils/CustomText";
 import CustomBorderBtn from "../../components/CustomBorderBtn";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { Alert } from "react-native";
+import auth from "@react-native-firebase/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage"; // Added import for AsyncStorage
+import Loader from "../../utils/Loader"; // Added import for Loader
+import firestore from "@react-native-firebase/firestore";
 const LoginPage = () => {
+  const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
+  const route = useRoute();
+
+  // Show the toast when navigated to this page from SignUp
+  useEffect(() => {
+    if (route.params?.toastMessage) {
+      Toast.show({
+        type: "success",
+        text1: "Success",
+        text2: route.params.toastMessage,
+        position: "bottom",
+      });
+    }
+  }, [route.params?.toastMessage]);
 
   const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -25,17 +43,53 @@ const LoginPage = () => {
     password: Yup.string().required("Password is required"),
   });
 
+  const handleLogin = async (values) => {
+    setLoading(true);
+    try {
+      // Sign in with email and password
+      const userCredential = await auth().signInWithEmailAndPassword(
+        values.email,
+        values.password
+      );
+      const user = userCredential.user;
+
+      // Retrieve additional user data from Firestore
+      const userDoc = await firestore().collection("users").doc(user.uid).get();
+
+      if (userDoc.exists) {
+        const userData = userDoc.data();
+
+        // Store the user data along with additional info (like role) in AsyncStorage
+        const storedData = {
+          user,
+          role: userData.role,
+          ...userData, // include all other fields from Firestore
+        };
+
+        await AsyncStorage.setItem("user", JSON.stringify(storedData));
+
+        // Navigate to the Dashboard
+        navigation.navigate("DashboardForCompany");
+      } else {
+        Alert.alert("Error", "User data not found");
+      }
+    } catch (error) {
+      Alert.alert("Login Failed", error.code);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
+      <Toast />
       <Image source={require("../../images/logo.png")} style={styles.logo} />
       <CustomText style={styles.title}>Login</CustomText>
 
       <Formik
         initialValues={{ email: "", password: "" }}
         validationSchema={validationSchema}
-        onSubmit={(values) => {
-          Alert.alert("Login Successful", JSON.stringify(values));
-        }}
+        onSubmit={handleLogin}
       >
         {({
           handleChange,
@@ -82,9 +136,12 @@ const LoginPage = () => {
           </>
         )}
       </Formik>
+      {loading && <Loader />}
     </SafeAreaView>
   );
 };
+
+export default LoginPage;
 
 const styles = StyleSheet.create({
   container: {
@@ -119,5 +176,3 @@ const styles = StyleSheet.create({
     marginLeft: moderateScale(30),
   },
 });
-
-export default LoginPage;

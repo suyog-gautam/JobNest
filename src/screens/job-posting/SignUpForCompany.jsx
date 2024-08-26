@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, ScrollView, StyleSheet, Image, Alert } from "react-native";
-import Toast from "react-native-toast-message";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   scale,
@@ -14,12 +13,17 @@ import CustomBorderBtn from "../../components/CustomBorderBtn";
 import CustomText from "../../utils/CustomText";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import Loader from "../../utils/Loader";
 import auth from "@react-native-firebase/auth";
+import { firestore } from "../../../firebaseConfig.js";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 
 const emailRegex =
   /^([A-Z0-9_+-]+\.?)*[A-Z0-9_+-]@([A-Z0-9][A-Z0-9-]*\.)+[A-Z]{2,}$/i;
 
 const SignUpForCompany = ({ navigation }) => {
+  const [loading, setLoading] = useState(false);
+
   // Validation schema using Yup
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
@@ -34,21 +38,41 @@ const SignUpForCompany = ({ navigation }) => {
       .required("Email is required"),
     password: Yup.string()
       .required("Password is required")
-      .min(6, "Password must be at least 6 characters long"), // More descriptive
+      .min(6, "Password must be at least 6 characters long"),
   });
 
   const handleSignUp = async (values, { setSubmitting }) => {
+    setLoading(true);
     try {
-      await auth().createUserWithEmailAndPassword(
+      // Create a new user with Firebase Authentication
+      const userCredential = await auth().createUserWithEmailAndPassword(
         values.email,
         values.password
       );
-      Alert.alert("Success", "You have signed up successfully!");
-      navigation.navigate("LoginForCompany");
+      const { uid } = userCredential.user;
+
+      // Store additional user data in Firestore under the 'users' collection
+      await setDoc(doc(firestore, "users", uid), {
+        name: values.name,
+        companyName: values.companyName,
+        contact: values.contact,
+        address: values.address,
+        email: values.email,
+        role: "Recruiter",
+        createdAt: serverTimestamp(),
+      });
+
+      // Navigate to the login page with a toast message
+      navigation.navigate("LoginForCompany", {
+        toastMessage: "You have signed up successfully. Now, please login.",
+      });
     } catch (error) {
+      // Error handling
       Alert.alert("Error", error.message);
     } finally {
+      // Stop the loader
       setSubmitting(false);
+      setLoading(false);
     }
   };
 
@@ -168,6 +192,7 @@ const SignUpForCompany = ({ navigation }) => {
           )}
         </Formik>
       </ScrollView>
+      {loading && <Loader />}
     </SafeAreaView>
   );
 };

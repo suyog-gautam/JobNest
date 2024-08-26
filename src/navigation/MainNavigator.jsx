@@ -1,32 +1,41 @@
-import { View, Text } from "react-native";
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { NavigationContainer } from "@react-navigation/native";
 import JobPostingNavigator from "./JobPostingNavigator";
 import JobSearchingNavigator from "./JobSearchingNavigator";
 import SelectUser from "../screens/onboarding/SelectUser";
+import DashboardForCompany from "../screens/job-posting/DashboardForCompany";
+import AddJobs from "../screens/job-posting/tabs/AddJobs";
 const Stack = createStackNavigator();
+
 const MainNavigator = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="SelectUser"
-          component={SelectUser}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="JobPostingNavigator"
-          component={JobPostingNavigator}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="JobSearchingNavigator"
-          component={JobSearchingNavigator}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Stack.Navigator>
+      <Stack.Screen
+        name="SelectUser"
+        component={SelectUser}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="JobPostingNavigator"
+        component={JobPostingNavigator}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="JobSearchingNavigator"
+        component={JobSearchingNavigator}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="DashboardForCompany"
+        component={DashboardForCompany}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="AddJobs"
+        component={AddJobs}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
   );
 };
 

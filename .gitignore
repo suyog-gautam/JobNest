@@ -36,3 +36,4 @@ yarn-error.*
 #Firebase Api keys
 GoogleService-Info.plist
 google-services.json
+firebaseConfig.js

@@ -22,6 +22,7 @@ const CustomTextInput = ({
   value,
   error,
   onChangeText,
+  multiline,
 }) => {
   const [secureTextEntry, setSecureTextEntry] = useState(
     type === "password" ? true : false
@@ -43,6 +44,8 @@ const CustomTextInput = ({
         secureTextEntry={secureTextEntry}
         value={value}
         onChangeText={onChangeText}
+        multiline={multiline}
+        numberOfLines={multiline ? 5 : 1}
       />
       {type === "password" && value && (
         <TouchableOpacity onPress={toggleSecureEntry} style={styles.showButton}>
