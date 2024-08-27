@@ -20,28 +20,22 @@ import CustomText from "../../../utils/CustomText";
 import { BG_COLOR } from "../../../utils/colors";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { useNavigation } from "@react-navigation/native";
-import { Scroll } from "lucide-react-native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
 import Loader from "../../../utils/Loader";
 import { firestore } from "../../../../firebaseConfig";
-import {
-  doc,
-  setDoc,
-  serverTimestamp,
-  arrayUnion,
-  updateDoc,
-  getDoc,
-} from "firebase/firestore";
-import uuid from "react-native-uuid";
-import "react-native-get-random-values";
-
+import { doc, updateDoc, getDoc } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const AddJobs = () => {
+
+const EditJobs = () => {
   const navigation = useNavigation();
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const route = useRoute();
+  const { job } = route.params; // Get the job data from the route parameters
+
   const [loading, setLoading] = useState(false);
   const [parsedUser, setParsedUser] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(job.department);
+
   useEffect(() => {
     // Retrieve user data from AsyncStorage
     const fetchUserData = async () => {
@@ -57,10 +51,10 @@ const AddJobs = () => {
 
     fetchUserData();
   }, []);
+
   // Validation schema using Yup
   const validationSchema = Yup.object().shape({
     company: Yup.string().required("Company name is required"),
-
     jobTitle: Yup.string().required("Job title is required"),
     department: Yup.string().required("Department is required"),
     skills: Yup.string().required("Skills are required"),
@@ -72,7 +66,7 @@ const AddJobs = () => {
       .matches(/^\d{2}\/\d{2}\/\d{4}$/, "Invalid date format (MM/DD/YYYY)"),
   });
 
-  const handlePostJob = async (values) => {
+  const handleUpdateJob = async (values) => {
     if (!parsedUser) {
       Alert.alert("Error", "User data not found.");
       return;
@@ -83,37 +77,28 @@ const AddJobs = () => {
 
       const userDocRef = doc(firestore, "jobs", parsedUser?.user?.uid);
 
-      // Create job data without adding it directly to the array
-      const jobData = {
-        jobId: uuid.v4(),
-        jobTitle: values.jobTitle,
-        company: values.company,
-        department: values.department,
-        skills: values.skills,
-        experience: values.experience,
-        package: values.package,
-        jobDescription: values.jobDescription,
-        applicationDeadline: values.applicationDeadline,
-      };
-
-      // Retrieve the document to check if it exists
+      // Retrieve the document
       const userDocSnapshot = await getDoc(userDocRef);
+      if (userDocSnapshot.exists()) {
+        const userData = userDocSnapshot.data();
+        const jobs = userData.jobs || [];
 
-      if (!userDocSnapshot.exists()) {
-        // If the document doesn't exist, create it with the first job
-        await setDoc(userDocRef, { jobs: [jobData] });
-      } else {
-        // If the document exists, update it by adding the job to the array
-        await updateDoc(userDocRef, {
-          jobs: arrayUnion(jobData),
-        });
+        // Update the job data in the jobs array
+        const updatedJobs = jobs.map((j) =>
+          j.jobId === job.jobId
+            ? { ...j, ...values, department: selectedCategory }
+            : j
+        );
+
+        // Update the document with the modified jobs array
+        await updateDoc(userDocRef, { jobs: updatedJobs });
+
+        navigation.navigate("DashboardForCompany");
+        Alert.alert("Success", "Job updated successfully!");
       }
-
-      navigation.navigate("DashboardForCompany");
-      Alert.alert("Success", "Job posted successfully!");
     } catch (error) {
-      Alert.alert("Error", "Failed to post the job. Please try again.");
-      console.error("Error posting job:", error);
+      Alert.alert("Error", "Failed to update the job. Please try again.");
+      console.error("Error updating job:", error);
     } finally {
       setLoading(false);
     }
@@ -132,22 +117,22 @@ const AddJobs = () => {
               source={require("../../../images/back-arrow.png")}
             />
           </TouchableOpacity>
-          <CustomText style={styles.title}>Post Jobs</CustomText>
+          <CustomText style={styles.title}>Edit Jobs</CustomText>
         </View>
 
         <Formik
           initialValues={{
-            company: "",
-            jobTitle: "",
-            department: "",
-            skills: "",
-            experience: "",
-            package: "",
-            jobDescription: "",
-            applicationDeadline: "",
+            company: job.company || "",
+            jobTitle: job.jobTitle || "",
+            department: job.department || "",
+            skills: job.skills || "",
+            experience: job.experience || "",
+            package: job.package || "",
+            jobDescription: job.jobDescription || "",
+            applicationDeadline: job.applicationDeadline || "",
           }}
           validationSchema={validationSchema}
-          onSubmit={handlePostJob}
+          onSubmit={handleUpdateJob}
         >
           {({
             handleChange,
@@ -275,7 +260,7 @@ const AddJobs = () => {
               ) : null}
 
               <CustomSolidBtn
-                title={"Post Job"}
+                title={"Update Job"}
                 onPress={handleSubmit}
                 disabled={isSubmitting}
               />
@@ -286,7 +271,8 @@ const AddJobs = () => {
     </SafeAreaView>
   );
 };
-export default AddJobs;
+
+export default EditJobs;
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: BG_COLOR },

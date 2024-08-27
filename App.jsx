@@ -41,7 +41,6 @@ const App = () => {
           } else {
             navigationRef.current?.navigate("LoginForCompany");
           }
-          console.log("Role:", parsedUser.name);
         }
 
         // Set the app as ready after all tasks are done

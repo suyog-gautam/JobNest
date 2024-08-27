@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import LoginForCompany from "../screens/job-posting/LoginForCompany";
 import SignUpForCompany from "../screens/job-posting/SignUpForCompany";
 import DashboardForCompany from "../screens/job-posting/DashboardForCompany";
+import EditJobs from "../screens/job-posting/tabs/EditJobs";
 import AddJobs from "../screens/job-posting/tabs/AddJobs";
 const Stack = createStackNavigator();
 
@@ -27,6 +28,11 @@ const JobPostingNavigator = () => {
       <Stack.Screen
         name="AddJobs"
         component={AddJobs}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="EditJobs"
+        component={EditJobs}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
