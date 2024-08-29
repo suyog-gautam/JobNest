@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
 import {
   scale,
   moderateScale,
@@ -17,11 +18,11 @@ import CustomTextInput from "../../../components/CustomTextInput";
 import CustomDropdown from "../../../components/CustomDropdown";
 import CustomSolidBtn from "../../../components/CustomSolidBtn";
 import CustomText from "../../../utils/CustomText";
-import { BG_COLOR } from "../../../utils/colors";
+import { BG_COLOR, TEXT_COLOR } from "../../../utils/colors";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useNavigation } from "@react-navigation/native";
-import { Scroll } from "lucide-react-native";
+
 import { ScrollView } from "react-native-gesture-handler";
 import Loader from "../../../utils/Loader";
 import { firestore } from "../../../../firebaseConfig";
@@ -127,9 +128,11 @@ const AddJobs = () => {
           <TouchableOpacity
             onPress={() => navigation.navigate("DashboardForCompany")}
           >
-            <Image
+            <MaterialIcons
+              name="arrow-back"
+              size={moderateScale(24)}
+              e
               style={styles.backArrow}
-              source={require("../../../images/back-arrow.png")}
             />
           </TouchableOpacity>
           <CustomText style={styles.title}>Post Jobs</CustomText>
@@ -293,6 +296,8 @@ const styles = StyleSheet.create({
   backArrow: {
     width: 30,
     height: 30,
+
+    color: TEXT_COLOR,
   },
   header: {
     width: "100%",
@@ -303,11 +308,13 @@ const styles = StyleSheet.create({
     paddingLeft: moderateScale(20),
   },
   title: {
+    color: TEXT_COLOR,
     fontSize: moderateScale(23),
     fontWeight: "600",
     marginLeft: scale(15),
     fontFamily: "Poppins_500Medium",
   },
+
   errorMsg: {
     color: "red",
     marginLeft: moderateScale(25),

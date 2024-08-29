@@ -36,7 +36,7 @@ const App = () => {
         if (userData) {
           const parsedUser = JSON.parse(userData);
           // Navigate based on user role
-          if (parsedUser.role === "Recruiter") {
+          if (parsedUser?.role === "Recruiter") {
             navigationRef.current?.navigate("DashboardForCompany");
           } else {
             navigationRef.current?.navigate("LoginForCompany");

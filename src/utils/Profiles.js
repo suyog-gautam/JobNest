@@ -1,4 +1,4 @@
-export const profiles = [
+export const Profiles = [
   {
     category: "Web Development",
     keywords: [

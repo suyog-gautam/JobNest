@@ -14,8 +14,8 @@ import {
   verticalScale,
 } from "react-native-size-matters";
 import CustomText from "../utils/CustomText";
-
-import { BG_COLOR } from "../utils/colors";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { BG_COLOR, TEXT_COLOR } from "../utils/colors";
 
 const CustomDropdown = ({ title, placeholder, value, error, onSelect }) => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
@@ -42,10 +42,7 @@ const CustomDropdown = ({ title, placeholder, value, error, onSelect }) => {
           <CustomText style={[styles.inputText, { flexGrow: 1 }]}>
             {value || placeholder}
           </CustomText>
-          <Image
-            source={require("../images/dropdown.png")}
-            style={styles.icon}
-          />
+          <MaterialIcons name="arrow-drop-down" style={styles.icon} />
         </View>
       </TouchableOpacity>
 
@@ -89,7 +86,8 @@ const styles = StyleSheet.create({
     paddingLeft: moderateScale(15),
     paddingRight: moderateScale(15),
     justifyContent: "center",
-    backgroundColor: "#fff",
+    backgroundColor: BG_COLOR,
+    borderColor: TEXT_COLOR,
   },
   inputTitle: {
     position: "absolute",
@@ -98,8 +96,10 @@ const styles = StyleSheet.create({
     backgroundColor: BG_COLOR,
     paddingHorizontal: moderateScale(5),
     fontSize: moderateScale(13),
+    color: TEXT_COLOR,
   },
   inputText: {
+    color: TEXT_COLOR,
     flex: 1,
     textAlign: "left",
     marginRight: moderateScale(15),
@@ -108,10 +108,10 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_400Regular",
   },
   icon: {
-    width: 20,
-    height: 20,
+    fontSize: 24,
     position: "absolute",
     right: 10,
+    color: TEXT_COLOR,
   },
   modalBackground: {
     flex: 1,
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
   },
   dropdownContainer: {
     width: "80%",
-    backgroundColor: "#fff",
+    backgroundColor: BG_COLOR,
     borderRadius: 10,
     padding: 10,
     maxHeight: "70%",
@@ -129,10 +129,11 @@ const styles = StyleSheet.create({
   dropdownItem: {
     padding: 15,
     borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
+    borderBottomColor: TEXT_COLOR,
   },
   dropdownText: {
     fontSize: 16,
+    color: TEXT_COLOR,
   },
 });
 export const Profiles = [

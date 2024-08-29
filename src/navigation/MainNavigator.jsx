@@ -2,10 +2,13 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import JobPostingNavigator from "./JobPostingNavigator";
 import JobSearchingNavigator from "./JobSearchingNavigator";
+
 import SelectUser from "../screens/onboarding/SelectUser";
 import DashboardForCompany from "../screens/job-posting/DashboardForCompany";
 import AddJobs from "../screens/job-posting/tabs/AddJobs";
 import EditJobs from "../screens/job-posting/tabs/EditJobs";
+import UpdateCompanyProfile from "../screens/job-posting/tabs/UpdateCompanyProfile";
+import ChangProfilePicForCompany from "../screens/job-posting/tabs/ChangeProfilePicForCompany";
 const Stack = createStackNavigator();
 
 const MainNavigator = () => {
@@ -26,6 +29,7 @@ const MainNavigator = () => {
         component={JobSearchingNavigator}
         options={{ headerShown: false }}
       />
+
       <Stack.Screen
         name="DashboardForCompany"
         component={DashboardForCompany}
@@ -39,6 +43,16 @@ const MainNavigator = () => {
       <Stack.Screen
         name="EditJobs"
         component={EditJobs}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="UpdateCompanyProfile"
+        component={UpdateCompanyProfile}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ChangeProfilePicForCompany"
+        component={ChangProfilePicForCompany}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

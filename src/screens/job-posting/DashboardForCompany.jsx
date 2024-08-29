@@ -9,7 +9,7 @@ import {
 import { verticalScale, scale } from "react-native-size-matters";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Loader from "../../utils/Loader";
-import { BG_COLOR } from "../../utils/colors";
+import { BG_COLOR, TEXT_COLOR } from "../../utils/colors";
 import MyJobs from "./tabs/MyJobs";
 import SearchCandidates from "./tabs/SearchCandidates";
 import Chat from "./tabs/Chat";
@@ -54,7 +54,13 @@ const DashboardForCompany = () => {
       {selectedTab === "home" && <MyJobs />}
       {selectedTab === "search" && <SearchCandidates />}
       {selectedTab === "chat" && <Chat />}
-      {selectedTab === "profile" && <Profile />}
+      {selectedTab === "profile" && (
+        <Profile
+          onJobClick={() => {
+            setSelectedTab("home");
+          }}
+        />
+      )}
 
       <View style={styles.bottomView}>
         <TouchableOpacity
@@ -136,7 +142,7 @@ const styles = StyleSheet.create({
   bottomView: {
     backgroundColor: BG_COLOR,
     width: "100%",
-    height: verticalScale(70),
+    height: verticalScale(50),
     position: "absolute",
     bottom: 0,
     shadowColor: "rgba(0, 0, 0, 0.5)",
@@ -182,6 +188,6 @@ const styles = StyleSheet.create({
   addIcon: {
     width: scale(28),
     height: scale(28),
-    tintColor: "black", // Always black color for add button
+    tintColor: TEXT_COLOR, // Always black color for add button
   },
 });

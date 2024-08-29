@@ -5,6 +5,8 @@ import SignUpForCompany from "../screens/job-posting/SignUpForCompany";
 import DashboardForCompany from "../screens/job-posting/DashboardForCompany";
 import EditJobs from "../screens/job-posting/tabs/EditJobs";
 import AddJobs from "../screens/job-posting/tabs/AddJobs";
+import UpdateCompanyProfile from "../screens/job-posting/tabs/UpdateCompanyProfile";
+import ChangeProfilePicForCompany from "../screens/job-posting/tabs/ChangeProfilePicForCompany";
 const Stack = createStackNavigator();
 
 const JobPostingNavigator = () => {
@@ -33,6 +35,16 @@ const JobPostingNavigator = () => {
       <Stack.Screen
         name="EditJobs"
         component={EditJobs}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="UpdateCompanyProfile"
+        component={UpdateCompanyProfile}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ChangeProfilePicForCompany"
+        component={ChangeProfilePicForCompany}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

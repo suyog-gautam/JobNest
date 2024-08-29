@@ -19,7 +19,7 @@ import auth from "@react-native-firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage"; // Added import for AsyncStorage
 import Loader from "../../utils/Loader"; // Added import for Loader
 import firestore from "@react-native-firebase/firestore";
-const LoginPage = () => {
+const LoginForCompany = () => {
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const route = useRoute();
@@ -63,9 +63,9 @@ const LoginPage = () => {
         const storedData = {
           user,
           role: userData.role,
-          ...userData, // include all other fields from Firestore
+          ...userData,
         };
-
+        await AsyncStorage.setItem("updateData", JSON.stringify(storedData));
         await AsyncStorage.setItem("user", JSON.stringify(storedData));
 
         // Navigate to the Dashboard
@@ -141,7 +141,7 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default LoginForCompany;
 
 const styles = StyleSheet.create({
   container: {

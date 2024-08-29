@@ -1,14 +1,48 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { moderateScale, verticalScale } from "react-native-size-matters";
-import { MaterialIcons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import CustomText from "../../../utils/CustomText";
+import { BG_COLOR, TEXT_COLOR } from "../../../utils/colors";
+import ProfileOptions from "../../../components/ProfileOptions";
+import { useNavigation } from "@react-navigation/native";
+import Loader from "../../../utils/Loader";
+const Profile = ({ onJobClick }) => {
+  const navigation = useNavigation();
+  const [userName, setUserName] = useState("User");
+  const [totalJobs, setTotalJobs] = useState(0);
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    const fetchUserData = async () => {
+      setLoading(true);
+      try {
+        const value = await AsyncStorage.getItem("updateData");
+        if (value) {
+          const parsedUser = JSON.parse(value);
 
-const Profile = () => {
+          setUserName(parsedUser.name || "User");
+        }
+
+        const jobs = await AsyncStorage.getItem("noOfJobs");
+        if (jobs) {
+          setTotalJobs(jobs);
+        }
+      } catch (error) {
+        console.error("Error retrieving user data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   const handleEditProfile = () => {
-    // Navigate to edit profile or perform edit action
+    navigation.navigate("UpdateCompanyProfile");
   };
-
+  const handlePictureChange = () => {
+    navigation.navigate("ChangeProfilePicForCompany");
+  };
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -17,24 +51,44 @@ const Profile = () => {
 
       <View style={styles.profileSection}>
         <Image
-          source={{ uri: "https://via.placeholder.com/150" }} // Replace with your profile picture URL
+          source={require("../../../images/user.png")}
           style={styles.profilePicture}
         />
-        <TouchableOpacity style={styles.editIcon} onPress={handleEditProfile}>
-          <MaterialIcons name="edit" size={24} color="#4CAF50" />
-        </TouchableOpacity>
+        <CustomText style={styles.userName}>{userName}</CustomText>
+        <View style={styles.actionButtonContainer}>
+          <TouchableOpacity
+            onPress={handlePictureChange}
+            style={styles.actionButton}
+          >
+            <CustomText style={styles.actionText}>Change Picture</CustomText>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleEditProfile}
+            style={styles.actionButton}
+          >
+            <CustomText style={styles.actionText}>Update Profile</CustomText>
+          </TouchableOpacity>
+        </View>
       </View>
-
-      <View style={styles.infoContainer}>
-        <CustomText style={styles.label}>Name</CustomText>
-        <Text style={styles.infoText}>John Doe</Text>
-
-        <CustomText style={styles.label}>Email</CustomText>
-        <Text style={styles.infoText}>johndoe@gmail.com</Text>
-
-        <CustomText style={styles.label}>Phone</CustomText>
-        <Text style={styles.infoText}>+1 234 567 890</Text>
-      </View>
+      <ProfileOptions
+        title={`My Jobs (${totalJobs})`}
+        icon={require("../../../images/jobs.png")}
+        onClick={() => {
+          onJobClick();
+        }}
+      />
+      <ProfileOptions
+        title="Contact"
+        icon={require("../../../images/contact.png")}
+      />
+      <ProfileOptions
+        title="App Theme"
+        icon={require("../../../images/theme.png")}
+      />
+      <ProfileOptions
+        title="Log Out"
+        icon={require("../../../images/logout.png")}
+      />
     </View>
   );
 };
@@ -44,59 +98,58 @@ export default Profile;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8f9fa",
+    backgroundColor: BG_COLOR,
     padding: moderateScale(20),
   },
   header: {
+    marginTop: verticalScale(10),
     alignItems: "center",
     marginBottom: verticalScale(20),
   },
   headerText: {
     fontSize: moderateScale(26),
-    fontWeight: "bold",
-    color: "#34495e",
+    fontWeight: "700",
     fontFamily: "Poppins_600Bold",
+    color: TEXT_COLOR,
   },
   profileSection: {
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: verticalScale(30),
+    marginBottom: verticalScale(40),
   },
   profilePicture: {
-    width: moderateScale(100),
-    height: moderateScale(100),
+    width: moderateScale(90),
+    height: moderateScale(90),
     borderRadius: moderateScale(50),
-    backgroundColor: "#E0E0E0",
+    backgroundColor: "#f1f1f1",
+    borderWidth: 1,
+    borderColor: TEXT_COLOR,
   },
-  editIcon: {
-    position: "absolute",
-    bottom: 0,
-    right: moderateScale(10),
-    backgroundColor: "#fff",
-    borderRadius: moderateScale(15),
-    padding: moderateScale(5),
-    elevation: 3,
+  userName: {
+    fontSize: moderateScale(20),
+    color: TEXT_COLOR,
+    fontWeight: "700",
+    fontFamily: "Poppins_600Medium",
+    marginTop: verticalScale(10),
   },
-  infoContainer: {
-    backgroundColor: "#fff",
-    borderRadius: moderateScale(10),
-    padding: moderateScale(15),
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
+  actionButtonContainer: {
+    width: "100%",
+    marginTop: verticalScale(20),
+    flexDirection: "row",
+    justifyContent: "space-evenly",
   },
-  label: {
+  actionButton: {
+    padding: moderateScale(10),
+    paddingHorizontal: moderateScale(14),
+    borderRadius: moderateScale(12),
+    backgroundColor: TEXT_COLOR,
+    BorderColor: "#34495e",
+    borderWidth: 1,
+  },
+  actionText: {
     fontSize: moderateScale(14),
-    color: "#7f8c8d",
+
+    color: BG_COLOR,
     fontFamily: "Poppins_400Regular",
-    marginBottom: verticalScale(4),
-  },
-  infoText: {
-    fontSize: moderateScale(16),
-    fontFamily: "Poppins_500Medium",
-    color: "#34495e",
-    marginBottom: verticalScale(10),
   },
 });

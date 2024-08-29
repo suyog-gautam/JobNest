@@ -15,6 +15,7 @@ import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import Loader from "../../../utils/Loader";
+import { BG_COLOR, TEXT_COLOR } from "../../../utils/colors";
 const MyJobs = () => {
   const [loading, setLoading] = useState(false);
   const [skeletonLoading, setSkeletonLoading] = useState(true);
@@ -32,10 +33,14 @@ const MyJobs = () => {
 
           // Real-time listener for job updates
           const userDocRef = doc(firestore, "jobs", parsedUser.user.uid);
-          const unsubscribe = onSnapshot(userDocRef, (docSnapshot) => {
+          const unsubscribe = onSnapshot(userDocRef, async (docSnapshot) => {
             if (docSnapshot.exists()) {
               const userData = docSnapshot.data();
               setJobs(userData.jobs || []);
+              await AsyncStorage.setItem(
+                "noOfJobs",
+                userData.jobs.length.toString()
+              );
             }
             setSkeletonLoading(false); // Stop loading once data is retrieved
           });
@@ -177,7 +182,7 @@ export default MyJobs;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8f9fa",
+    backgroundColor: BG_COLOR,
     paddingHorizontal: moderateScale(10),
     marginBottom: moderateScale(90),
   },
@@ -190,10 +195,10 @@ const styles = StyleSheet.create({
     fontSize: moderateScale(26),
     fontWeight: "700",
     fontFamily: "Poppins_600Bold",
-    color: "#34495e",
+    color: TEXT_COLOR,
   },
   card: {
-    backgroundColor: "#ffffff",
+    backgroundColor: BG_COLOR,
     padding: moderateScale(20),
     borderRadius: moderateScale(15),
     marginVertical: moderateScale(12),
