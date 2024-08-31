@@ -9,18 +9,26 @@ import { useNavigation } from "@react-navigation/native";
 import Loader from "../../../utils/Loader";
 const Profile = ({ onJobClick }) => {
   const navigation = useNavigation();
-  const [userName, setUserName] = useState("User");
+  const [userData, setUserData] = useState(null);
   const [totalJobs, setTotalJobs] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [profilePictureUrl, setProfilePictureUrl] = useState(null);
   useEffect(() => {
     const fetchUserData = async () => {
       setLoading(true);
       try {
         const value = await AsyncStorage.getItem("updateData");
+        const photo = await AsyncStorage.getItem("user");
+        if (photo) {
+          const data = JSON.parse(photo);
+          setProfilePictureUrl(data?.profilePictureUrl);
+          console.log("photo", data?.profilePictureUrl);
+        }
+
         if (value) {
           const parsedUser = JSON.parse(value);
 
-          setUserName(parsedUser.name || "User");
+          setUserData(parsedUser);
         }
 
         const jobs = await AsyncStorage.getItem("noOfJobs");
@@ -51,10 +59,14 @@ const Profile = ({ onJobClick }) => {
 
       <View style={styles.profileSection}>
         <Image
-          source={require("../../../images/user.png")}
+          source={
+            profilePictureUrl
+              ? { uri: profilePictureUrl }
+              : require("../../../images/user.png")
+          }
           style={styles.profilePicture}
         />
-        <CustomText style={styles.userName}>{userName}</CustomText>
+        <CustomText style={styles.userName}>{userData?.name}</CustomText>
         <View style={styles.actionButtonContainer}>
           <TouchableOpacity
             onPress={handlePictureChange}

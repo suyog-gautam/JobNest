@@ -65,7 +65,7 @@ const LoginForCompany = () => {
           role: userData.role,
           ...userData,
         };
-        await AsyncStorage.setItem("updateData", JSON.stringify(storedData));
+
         await AsyncStorage.setItem("user", JSON.stringify(storedData));
 
         // Navigate to the Dashboard

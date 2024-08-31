@@ -112,7 +112,10 @@ const EditJobs = () => {
           <TouchableOpacity
             onPress={() => navigation.navigate("DashboardForCompany")}
           >
-            <MaterialIcons name="arrow-back" style={styles.backArrow} />
+            <Image
+              source={require("../../../images/back-arrow.png")}
+              style={styles.backArrow}
+            />
           </TouchableOpacity>
           <CustomText style={styles.title}>Edit Jobs</CustomText>
         </View>
@@ -274,9 +277,9 @@ export default EditJobs;
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: BG_COLOR },
   backArrow: {
-    width: 30,
-    height: 30,
-    color: TEXT_COLOR,
+    width: 25,
+    height: 25,
+    tintColor: TEXT_COLOR,
   },
   header: {
     width: "100%",
