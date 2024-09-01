@@ -19,6 +19,7 @@
     "@react-navigation/drawer": "^6.7.2",
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/stack": "^6.4.1",
+    "date-fns": "^3.6.0",
     "expo": "^51.0.28",
     "expo-app-loading": "^2.1.1",
     "expo-build-properties": "~0.12.5",

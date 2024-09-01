@@ -46,10 +46,20 @@ const Home = () => {
         </CustomText>
       </View>
       <View style={styles.buttonView}>
-        <TouchableOpacity style={styles.loginBtn}>
+        <TouchableOpacity
+          style={styles.loginBtn}
+          onPress={() => {
+            navigation.navigate("LoginForUsers");
+          }}
+        >
           <CustomText style={styles.loginTxt}>Login</CustomText>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.signupBtn}>
+        <TouchableOpacity
+          style={styles.signupBtn}
+          onPress={() => {
+            navigation.navigate("SignupForUsers");
+          }}
+        >
           <CustomText style={styles.signupTxt}>Register</CustomText>
         </TouchableOpacity>
       </View>
@@ -62,13 +72,20 @@ const Home = () => {
           placeholder="Enter Job Title"
           style={styles.input}
           placeholderTextColor="gray"
+          editable={false}
         />
         <TextInput
           placeholder="Enter Job Type"
           placeholderTextColor="gray"
           style={styles.input}
+          editable={false}
         />
-        <TouchableOpacity style={styles.searchBtn}>
+        <TouchableOpacity
+          style={styles.searchBtn}
+          onPress={() => {
+            navigation.navigate("SearchJobs");
+          }}
+        >
           <CustomText style={styles.searchBtnText}>Search Jobs</CustomText>
         </TouchableOpacity>
       </View>

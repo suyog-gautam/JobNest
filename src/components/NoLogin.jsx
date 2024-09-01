@@ -4,7 +4,9 @@ import CustomText from "../utils/CustomText";
 import { BG_COLOR, TEXT_COLOR } from "../utils/colors";
 import { moderateScale } from "react-native-size-matters";
 import CustomSolidBtn from "./CustomSolidBtn";
+import { useNavigation } from "@react-navigation/native";
 const NoLogin = ({ heading, description }) => {
+  const navigation = useNavigation();
   return (
     <View style={styles.comtainer}>
       <CustomText style={styles.heading}>
@@ -13,12 +15,24 @@ const NoLogin = ({ heading, description }) => {
       <CustomText style={styles.description}>
         {description ? description : null}{" "}
       </CustomText>
-      <CustomSolidBtn title={"Login"} />
+      <CustomSolidBtn
+        title={"Login"}
+        onPress={() => {
+          navigation.navigate("LoginForUsers");
+        }}
+      />
       <View style={styles.signupView}>
         <CustomText style={styles.signupText}>
           Don't have an account?
         </CustomText>
-        <CustomText style={styles.crtTxt}>Create Account</CustomText>
+        <CustomText
+          style={styles.crtTxt}
+          onPress={() => {
+            navigation.navigate("SignupForUsers");
+          }}
+        >
+          Create Account
+        </CustomText>
       </View>
     </View>
   );

@@ -95,6 +95,8 @@ const AddJobs = () => {
         package: values.package,
         jobDescription: values.jobDescription,
         applicationDeadline: values.applicationDeadline,
+        address: parsedUser.address,
+        postedOn: new Date().toISOString(),
       };
 
       // Retrieve the document to check if it exists
