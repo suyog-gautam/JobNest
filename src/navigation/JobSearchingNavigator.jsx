@@ -6,6 +6,7 @@ import SearchJobs from "../screens/job-searching/tabs/SearchJobs";
 import SingleJob from "../screens/job-searching/tabs/SingleJob";
 import LoginForUsers from "../screens/job-searching/LoginForUsers";
 import SingupForUsers from "../screens/job-searching/SingupForUsers";
+import SavedJobs from "../screens/job-searching/tabs/SavedJobs";
 import { BG_COLOR, TEXT_COLOR } from "../utils/colors";
 const JobSearchingNavigator = () => {
   const Stack = createStackNavigator();
@@ -42,6 +43,26 @@ const JobSearchingNavigator = () => {
         options={{
           headerShown: true,
           title: "Job Details",
+          headerTitleAlign: "center",
+          headerTintColor: TEXT_COLOR,
+
+          headerStyle: {
+            backgroundColor: BG_COLOR,
+            height: 70,
+            shadowColor: TEXT_COLOR,
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+            elevation: 5,
+          },
+        }}
+      />
+      <Stack.Screen
+        name="SavedJobs"
+        component={SavedJobs}
+        options={{
+          headerShown: true,
+          title: "Saved Jobs",
           headerTitleAlign: "center",
           headerTintColor: TEXT_COLOR,
 

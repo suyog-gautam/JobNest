@@ -1,2 +1,2 @@
-export const BG_COLOR = "#FFFFFF";
-export const TEXT_COLOR = "#000000";
+export const BG_COLOR = "#000000";
+export const TEXT_COLOR = "#FFFFFF";

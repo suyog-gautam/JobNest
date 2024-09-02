@@ -67,9 +67,14 @@ const LoginForCompany = () => {
         };
 
         await AsyncStorage.setItem("user", JSON.stringify(storedData));
-
-        // Navigate to the Dashboard
-        navigation.navigate("DashboardForCompany");
+        if (userData.role === "Recruiter") {
+          navigation.reset({
+            index: 0,
+            routes: [{ name: "DashboardForCompany" }],
+          });
+        } else {
+          navigation.navigate("Main");
+        }
       } else {
         Alert.alert("Error", "User data not found");
       }

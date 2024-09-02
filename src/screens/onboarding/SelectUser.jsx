@@ -10,9 +10,14 @@ import { BG_COLOR, TEXT_COLOR } from "../../utils/colors";
 import { moderateScale, verticalScale } from "react-native-size-matters";
 import { useNavigation } from "@react-navigation/native";
 import CustomText from "../../utils/CustomText";
+import JobSearchingNavigator from "../../navigation/JobSearchingNavigator";
+import { UseAuth } from "../../utils/AuthContext";
+import { useEffect } from "react";
 const screenWidth = Dimensions.get("window").width;
 
 const SelectUser = () => {
+  const { user } = UseAuth();
+  useEffect(() => {}, [user]);
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
@@ -21,7 +26,7 @@ const SelectUser = () => {
       <CustomText style={styles.title}>What you are looking for?</CustomText>
       <TouchableOpacity
         style={styles.wantToHire}
-        onPress={() => navigation.navigate("JobPostingNavigator")} // Use a lambda to defer execution
+        onPress={() => navigation.navigate("LoginForCompany")} // Use a lambda to defer execution
       >
         <CustomText style={styles.buttonHire}>
           Want To Hire Candidate
@@ -29,7 +34,7 @@ const SelectUser = () => {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.wantToSearch}
-        onPress={() => navigation.navigate("JobSearchingNavigator")}
+        onPress={() => navigation.navigate("JobSearchingNavigator")} // Use a lambda to defer execution
       >
         <CustomText style={styles.buttonFind}>Want To Get Job</CustomText>
       </TouchableOpacity>

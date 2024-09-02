@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import { moderateScale, verticalScale } from "react-native-size-matters";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CustomText from "../../../utils/CustomText";
@@ -22,7 +29,6 @@ const Profile = ({ onJobClick }) => {
         if (photo) {
           const data = JSON.parse(photo);
           setProfilePictureUrl(data?.profilePictureUrl);
-          console.log("photo", data?.profilePictureUrl);
         }
 
         if (value) {
@@ -51,6 +57,37 @@ const Profile = ({ onJobClick }) => {
   const handlePictureChange = () => {
     navigation.navigate("ChangeProfilePicForCompany");
   };
+  const handleLogout = async () => {
+    Alert.alert(
+      "Confirm Logout",
+      "Are you sure you want to log out?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Logout cancelled"),
+          style: "cancel",
+        },
+        {
+          text: "Logout",
+          onPress: async () => {
+            try {
+              await AsyncStorage.removeItem("user");
+              alert("Logged out successfully");
+              navigation.reset({
+                index: 0,
+                routes: [{ name: "SelectUser" }],
+              });
+            } catch (error) {
+              console.error("Error logging out: ", error);
+            }
+          },
+          style: "destructive",
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -100,6 +137,7 @@ const Profile = ({ onJobClick }) => {
       <ProfileOptions
         title="Log Out"
         icon={require("../../../images/logout.png")}
+        onClick={handleLogout}
       />
     </View>
   );

@@ -11,8 +11,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { BG_COLOR, TEXT_COLOR } from "../../utils/colors";
 import CustomText from "../../utils/CustomText";
 import { moderateScale, scale } from "react-native-size-matters";
-
+import { useNavigation } from "@react-navigation/native";
+import { UseAuth } from "../../utils/AuthContext";
 const CustomDrawer = () => {
+  const navigation = useNavigation();
+  const { user } = UseAuth();
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.topView}>
@@ -21,30 +24,49 @@ const CustomDrawer = () => {
           style={styles.profileImage}
         />
         <View>
-          <CustomText style={styles.headerText}>Build Your Profile</CustomText>
+          <CustomText style={styles.headerText}>
+            {user.name ? user.name : "Build Your Profile"}
+          </CustomText>
           <CustomText style={styles.subHeaderText}>
-            Job Oppurtunity is Waiting for you at Job Nest{" "}
+            {user.email
+              ? user.email
+              : "Job Oppurtunity is Waiting for you at Job Nest"}
           </CustomText>
         </View>
       </View>
-      <View style={styles.buttonView}>
-        <TouchableOpacity style={styles.loginBtn}>
-          <CustomText style={styles.loginTxt}>Login</CustomText>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.signupBtn}>
-          <CustomText style={styles.signupTxt}>Register</CustomText>
-        </TouchableOpacity>
-      </View>
+      {user ? null : (
+        <View style={styles.buttonView}>
+          <TouchableOpacity style={styles.loginBtn}>
+            <CustomText style={styles.loginTxt}>Login</CustomText>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.signupBtn}>
+            <CustomText style={styles.signupTxt}>Register</CustomText>
+          </TouchableOpacity>
+        </View>
+      )}
       <View style={styles.seperator} />
       <FlatList
         contentContainerStyle={{ marginTop: scale(20) }}
         data={[
+          user
+            ? {
+                title: "Saved Jobs",
+                icon: require("../../images/bookmark.png"),
+                onPress: () => navigation.navigate("SavedJobs"),
+              }
+            : null,
           { title: "Rate Us", icon: require("../../images/rateus.png") },
           { title: "Theme", icon: require("../../images/theme.png") },
+          user
+            ? { title: "Logout", icon: require("../../images/logout.png") }
+            : null,
         ]}
         renderItem={({ item, index }) => {
           return (
-            <TouchableOpacity style={styles.menuItem}>
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={item.onPress ? item.onPress : null}
+            >
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Image source={item.icon} style={styles.icon} />
                 <CustomText style={styles.itemText}>{item.title}</CustomText>

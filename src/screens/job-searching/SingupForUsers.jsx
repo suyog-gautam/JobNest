@@ -15,7 +15,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import Loader from "../../utils/Loader";
 import auth from "@react-native-firebase/auth";
-import { firestore } from "../../../firebaseConfig.js";
+import { firestore } from "../../../firebaseConfig";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 
 const emailRegex =
@@ -24,14 +24,13 @@ const emailRegex =
 const SignupForUsers = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
 
-  // Validation schema using Yup
+  // Revised Validation schema without companyName
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
-    companyName: Yup.string().required("Company name is required"),
     contact: Yup.string()
       .required("Contact number is required")
       .matches(/^\d{10}$/, "Invalid Contact"),
-    address: Yup.string().required("Address is required"),
+
     email: Yup.string()
       .email("Please enter a valid email ")
       .matches(emailRegex, "Please enter a valid email")
@@ -54,16 +53,15 @@ const SignupForUsers = ({ navigation }) => {
       // Store additional user data in Firestore under the 'users' collection
       await setDoc(doc(firestore, "users", uid), {
         name: values.name,
-
         contact: values.contact,
-        address: values.address,
+
         email: values.email,
         role: "Candidate",
         createdAt: serverTimestamp(),
       });
 
-      // Navigate to the login page with a toast message
-      navigation.navigate("LoginForCompany", {
+      // Navigate to the user-specific login page with a toast message
+      navigation.navigate("LoginForUsers", {
         toastMessage: "You have signed up successfully. Now, please login.",
       });
     } catch (error) {
@@ -84,9 +82,8 @@ const SignupForUsers = ({ navigation }) => {
       <Formik
         initialValues={{
           name: "",
-
           contact: "",
-          address: "",
+
           email: "",
           password: "",
         }}
@@ -172,12 +169,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: BG_COLOR,
+    padding: moderateScale(20),
   },
   logo: {
     width: scale(70),
     height: scale(70),
     alignSelf: "center",
-    marginTop: moderateVerticalScale(0),
+    marginTop: moderateVerticalScale(20),
     borderRadius: moderateScale(7),
   },
   title: {
@@ -185,10 +183,12 @@ const styles = StyleSheet.create({
     fontSize: moderateScale(25),
     marginTop: moderateVerticalScale(30),
     fontWeight: "600",
+    marginBottom: moderateVerticalScale(20),
   },
   errorMsg: {
     color: "red",
     marginLeft: moderateScale(30),
+    marginBottom: moderateVerticalScale(10),
   },
 });
 

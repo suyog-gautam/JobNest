@@ -28,6 +28,7 @@ const ChangeProfilePicForCompany = () => {
   const [loading, setLoading] = useState(false);
   const [uploadEnabled, setUploadEnabled] = useState(false);
   const [uid, setUid] = useState(null);
+  // const[ profilepic, setprofilepic] = useState(null);
   useEffect(() => {
     const fetchUserData = async () => {
       setLoading(true);
@@ -37,6 +38,10 @@ const ChangeProfilePicForCompany = () => {
           const localUser = JSON.parse(value);
 
           setUid(localUser?.user?.uid);
+
+          if (localUser?.profilePictureUrl) {
+            setImage(localUser?.profilePictureUrl);
+          }
         }
       } catch (error) {
         console.error("Failed to load user data:", error);

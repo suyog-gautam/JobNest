@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   View,
-  TextInput,
   FlatList,
   Text,
   StyleSheet,
@@ -14,118 +13,72 @@ import {
   moderateScale,
 } from "react-native-size-matters";
 import { TEXT_COLOR, BG_COLOR } from "../../../utils/colors";
-import { collection, onSnapshot, doc, getDoc } from "firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
-import { firestore } from "../../../../firebaseConfig"; // Adjust the import according to your setup
+import { firestore } from "../../../../firebaseConfig";
 import { Ionicons, MaterialIcons, FontAwesome } from "@expo/vector-icons";
 import { formatDistanceToNow } from "date-fns";
 import CustomText from "../../../utils/CustomText";
+import { doc, onSnapshot, collection } from "firebase/firestore";
 import { UseAuth } from "../../../utils/AuthContext";
 
-const SearchJobs = () => {
+const SavedJobs = () => {
+  const [savedJobs, setSavedJobs] = useState([]);
+
   const { user } = UseAuth();
-  const [searchText, setSearchText] = useState("");
-  const [allJobs, setAllJobs] = useState([]);
-  const [filteredJobs, setFilteredJobs] = useState([]);
-  const [savedJobIds, setSavedJobIds] = useState([]); // Holds an array of saved job IDs
   const navigation = useNavigation();
 
   useEffect(() => {
-    const fetchAllJobs = async () => {
-      const jobsCollectionRef = collection(firestore, "jobs");
+    if (user?.user?.uid) {
+      const savedJobsRef = doc(firestore, "savedJobs", user.user.uid);
 
-      const unsubscribe = onSnapshot(jobsCollectionRef, (querySnapshot) => {
-        const jobsList = [];
-        querySnapshot.forEach((doc) => {
-          const userJobs = doc.data().jobs || [];
-          jobsList.push(...userJobs);
-        });
-        setAllJobs(jobsList);
+      const unsubscribe = onSnapshot(savedJobsRef, (doc) => {
+        if (doc.exists()) {
+          const jobIds = doc.data().jobs || [];
+          fetchJobs(jobIds);
+        } else {
+          setSavedJobs([]);
+        }
       });
 
       return () => unsubscribe();
-    };
-
-    fetchAllJobs();
-  }, []);
-
-  useEffect(() => {
-    if (user) {
-      const fetchSavedJobs = async () => {
-        try {
-          const savedJobsDocRef = doc(firestore, "savedJobs", user.user.uid);
-          const savedJobsDoc = await getDoc(savedJobsDocRef);
-
-          if (savedJobsDoc.exists()) {
-            const savedJobsData = savedJobsDoc.data().jobs || [];
-
-            setSavedJobIds(savedJobsData);
-          } else {
-            console.log("No saved jobs document found.");
-            setSavedJobIds([]);
-          }
-        } catch (error) {
-          console.error("Error fetching saved jobs:", error);
-        }
-      };
-
-      fetchSavedJobs();
     }
   }, [user]);
 
-  useEffect(() => {
-    if (searchText.trim() === "") {
-      setFilteredJobs([]);
-    } else {
-      const filtered = allJobs.filter(
-        (job) =>
-          job.jobTitle?.toLowerCase().includes(searchText.toLowerCase()) ||
-          job.company?.toLowerCase().includes(searchText.toLowerCase()) ||
-          job.skills?.toLowerCase().includes(searchText.toLowerCase()) ||
-          job.package?.toLowerCase().includes(searchText.toLowerCase()) ||
-          job.experience?.toLowerCase().includes(searchText.toLowerCase())
-      );
-      setFilteredJobs(filtered);
+  const fetchJobs = async (jobIds) => {
+    try {
+      const jobsRef = collection(firestore, "jobs");
+      const unsubscribe = onSnapshot(jobsRef, (querySnapshot) => {
+        const jobsList = [];
+        querySnapshot.forEach((doc) => {
+          const userJobs = doc.data().jobs || [];
+          userJobs.forEach((job) => {
+            if (jobIds.includes(job.jobId)) {
+              jobsList.push(job);
+            }
+          });
+        });
+        setSavedJobs(jobsList);
+      });
+    } catch (error) {
+      console.error("Error fetching jobs:", error);
     }
-  }, [searchText, allJobs]);
+  };
 
-  const handleJobPress = (job) => {
-    navigation.navigate("SingleJob", { job });
+  const handleJobPress = (item) => {
+    navigation.navigate("SingleJob", { job: item });
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.searchBox}>
-        <Image
-          source={require("../../../images/search.png")}
-          style={styles.searchicon}
-        />
-        <TextInput
-          style={styles.searchText}
-          placeholder="Search for Jobs"
-          placeholderTextColor="grey"
-          value={searchText}
-          onChangeText={setSearchText}
-        />
-        <TouchableOpacity onPress={() => setSearchText("")}>
-          <Image
-            source={require("../../../images/cross.png")}
-            style={styles.searchicon}
-          />
-        </TouchableOpacity>
-      </View>
-
       <FlatList
         style={{ marginTop: moderateVerticalScale(10) }}
-        data={filteredJobs}
+        data={savedJobs}
         keyExtractor={(item) => item.jobId}
         renderItem={({ item }) => {
           const postedDate = new Date(item?.postedOn);
           const formattedTime = isNaN(postedDate)
             ? "Invalid Date"
             : formatDistanceToNow(postedDate, { addSuffix: true });
-
-          const isJobSaved = savedJobIds.includes(item.jobId);
 
           return (
             <TouchableOpacity onPress={() => handleJobPress(item)}>
@@ -136,11 +89,7 @@ const SearchJobs = () => {
                   </CustomText>
 
                   <Image
-                    source={
-                      isJobSaved
-                        ? require("../../../images/bookmarkfiiled.png")
-                        : require("../../../images/bookmark.png")
-                    }
+                    source={require("../../../images/bookmarkfiiled.png")}
                     style={styles.bookmark}
                   />
                 </View>
@@ -192,43 +141,19 @@ const SearchJobs = () => {
           );
         }}
         ListEmptyComponent={() => (
-          <Text style={styles.noResults}>No jobs found</Text>
+          <Text style={styles.noResults}>No saved jobs found</Text>
         )}
       />
     </View>
   );
 };
 
-export default SearchJobs;
+export default SavedJobs;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: BG_COLOR,
-  },
-  searchBox: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: BG_COLOR,
-    borderRadius: scale(40),
-    alignSelf: "center",
-    width: "90%",
-    borderColor: TEXT_COLOR,
-    borderWidth: 1,
-    marginTop: moderateScale(15),
-    paddingLeft: scale(15),
-    height: moderateScale(50),
-  },
-  searchicon: {
-    width: scale(15),
-    height: scale(15),
-    tintColor: TEXT_COLOR,
-  },
-  searchText: {
-    width: "80%",
-    fontSize: moderateScale(16),
-    fontFamily: "Poppins_400Regular",
-    color: TEXT_COLOR,
-    marginLeft: scale(10),
   },
   jobItem: {
     padding: moderateScale(16),
@@ -301,10 +226,6 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_400Regular",
     fontSize: moderateScale(12),
     color: "#8a7c72",
-  },
-  saveText: {
-    fontSize: moderateScale(12),
-    color: "#2196F3",
   },
   noResults: {
     fontFamily: "Poppins_400Regular",

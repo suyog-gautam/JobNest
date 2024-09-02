@@ -6,6 +6,7 @@ import * as SplashScreen from "expo-splash-screen";
 import Loader from "./src/utils/Loader";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
+import { AuthProvider } from "./src/utils/AuthContext";
 import { BG_COLOR } from "./src/utils/colors";
 import {
   useFonts,
@@ -31,24 +32,11 @@ const App = () => {
   useEffect(() => {
     const prepareApp = async () => {
       try {
-        // Fetch user data from AsyncStorage
-        const userData = await AsyncStorage.getItem("user");
-        if (userData) {
-          const parsedUser = JSON.parse(userData);
-          // Navigate based on user role
-          // if (parsedUser?.role === "Recruiter") {
-          //   navigationRef.current?.navigate("DashboardForCompany");
-          // } else {
-          //   navigationRef.current?.navigate("LoginForCompany");
-          // }
-        }
-
-        // Set the app as ready after all tasks are done
         setAppIsReady(true);
         await SplashScreen.hideAsync();
       } catch (error) {
         console.warn(error);
-        // Ensure splash screen is hidden even on error
+
         await SplashScreen.hideAsync();
       }
     };
@@ -69,8 +57,10 @@ const App = () => {
   return (
     <View style={styles.container}>
       <NavigationContainer ref={navigationRef}>
-        <MainNavigator />
-        <Toast />
+        <AuthProvider>
+          <MainNavigator />
+          <Toast />
+        </AuthProvider>
       </NavigationContainer>
     </View>
   );

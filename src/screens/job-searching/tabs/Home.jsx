@@ -6,8 +6,10 @@ import { moderateScale, scale } from "react-native-size-matters";
 import { TextInput } from "react-native-gesture-handler";
 import CustomSolidBtn from "../../../components/CustomSolidBtn";
 import { useNavigation } from "@react-navigation/native";
+import { UseAuth } from "../../../utils/AuthContext";
 import SearchJobs from "./SearchJobs";
 const Home = () => {
+  const { user } = UseAuth();
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
@@ -23,46 +25,49 @@ const Home = () => {
         />
         <CustomText style={styles.searchText}>Search for Jobs</CustomText>
       </TouchableOpacity>
-
-      <CustomText style={styles.headerText}>
-        {"You are one step away from getting Job"}
-      </CustomText>
-      <View style={styles.notes}>
-        <Image
-          source={require("../../../images/star.png")}
-          style={styles.icon}
-        />
-        <CustomText style={styles.noteText}>
-          {"Get Jobs after creating account"}
-        </CustomText>
-      </View>
-      <View style={styles.notes}>
-        <Image
-          source={require("../../../images/star.png")}
-          style={styles.icon}
-        />
-        <CustomText style={styles.noteText}>
-          {"Chat with Employers and get hired"}
-        </CustomText>
-      </View>
-      <View style={styles.buttonView}>
-        <TouchableOpacity
-          style={styles.loginBtn}
-          onPress={() => {
-            navigation.navigate("LoginForUsers");
-          }}
-        >
-          <CustomText style={styles.loginTxt}>Login</CustomText>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.signupBtn}
-          onPress={() => {
-            navigation.navigate("SignupForUsers");
-          }}
-        >
-          <CustomText style={styles.signupTxt}>Register</CustomText>
-        </TouchableOpacity>
-      </View>
+      {!user ? (
+        <>
+          <CustomText style={styles.headerText}>
+            {"You are one step away from getting Job"}
+          </CustomText>
+          <View style={styles.notes}>
+            <Image
+              source={require("../../../images/star.png")}
+              style={styles.icon}
+            />
+            <CustomText style={styles.noteText}>
+              {"Get Jobs after creating account"}
+            </CustomText>
+          </View>
+          <View style={styles.notes}>
+            <Image
+              source={require("../../../images/star.png")}
+              style={styles.icon}
+            />
+            <CustomText style={styles.noteText}>
+              {"Chat with Employers and get hired"}
+            </CustomText>
+          </View>
+          <View style={styles.buttonView}>
+            <TouchableOpacity
+              style={styles.loginBtn}
+              onPress={() => {
+                navigation.navigate("LoginForUsers");
+              }}
+            >
+              <CustomText style={styles.loginTxt}>Login</CustomText>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.signupBtn}
+              onPress={() => {
+                navigation.navigate("SignupForUsers");
+              }}
+            >
+              <CustomText style={styles.signupTxt}>Register</CustomText>
+            </TouchableOpacity>
+          </View>
+        </>
+      ) : null}
       <View style={styles.jobsearchCard}>
         <Image
           source={require("../../../images/search.gif")}
