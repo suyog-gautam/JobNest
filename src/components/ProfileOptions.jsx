@@ -42,7 +42,11 @@ const ProfileOptions = ({ title, icon, onClick }) => {
       </View>
       <Image
         source={require("../images/right.png")}
-        style={{ height: moderateScale(20), width: moderateScale(20) }}
+        style={{
+          height: moderateScale(20),
+          width: moderateScale(20),
+          tintColor: TEXT_COLOR,
+        }}
       />
     </TouchableOpacity>
   );

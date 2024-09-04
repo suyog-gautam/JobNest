@@ -8,7 +8,7 @@ import {
   moderateScale,
   moderateVerticalScale,
 } from "react-native-size-matters";
-import { BG_COLOR } from "../../utils/colors";
+import { BG_COLOR, TEXT_COLOR } from "../../utils/colors";
 import CustomTextInput from "../../components/CustomTextInput";
 import CustomSolidBtn from "../../components/CustomSolidBtn";
 import CustomText from "../../utils/CustomText";
@@ -166,6 +166,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontSize: moderateScale(25),
     marginTop: moderateVerticalScale(50),
+    color: TEXT_COLOR,
     fontWeight: "600",
   },
   forgotPasswordContainer: {
@@ -174,6 +175,7 @@ const styles = StyleSheet.create({
     marginTop: moderateScale(13),
   },
   forgotPasswordText: {
+    color: TEXT_COLOR,
     fontWeight: "500",
     fontSize: moderateScale(14),
     textDecorationLine: "underline",

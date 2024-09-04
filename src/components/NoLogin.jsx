@@ -5,7 +5,10 @@ import { BG_COLOR, TEXT_COLOR } from "../utils/colors";
 import { moderateScale } from "react-native-size-matters";
 import CustomSolidBtn from "./CustomSolidBtn";
 import { useNavigation } from "@react-navigation/native";
+import Toast from "react-native-toast-message";
+import { UseAuth } from "../utils/AuthContext";
 const NoLogin = ({ heading, description }) => {
+  const { user } = UseAuth();
   const navigation = useNavigation();
   return (
     <View style={styles.comtainer}>
@@ -18,7 +21,27 @@ const NoLogin = ({ heading, description }) => {
       <CustomSolidBtn
         title={"Login"}
         onPress={() => {
-          navigation.navigate("LoginForUsers");
+          try {
+            if (!user) {
+              navigation.navigate("LoginForUsers");
+            } else {
+              // Show toast if the user is already logged in
+              Toast.show({
+                type: "info",
+                text1: "Already Logged In",
+                text2: "You are already logged in.",
+                position: "top",
+              });
+            }
+          } catch (error) {
+            // Fallback toast in case of unexpected errors
+            Toast.show({
+              type: "error",
+              text1: "Navigation Error",
+              text2: "An unexpected error occurred.",
+              position: "top",
+            });
+          }
         }}
       />
       <View style={styles.signupView}>
@@ -28,7 +51,27 @@ const NoLogin = ({ heading, description }) => {
         <CustomText
           style={styles.crtTxt}
           onPress={() => {
-            navigation.navigate("SignupForUsers");
+            try {
+              if (!user) {
+                navigation.navigate("SignupForUsers");
+              } else {
+                // Show toast if the user is already logged in
+                Toast.show({
+                  type: "info",
+                  text1: "Already Logged In",
+                  text2: "You are already logged in.",
+                  position: "top",
+                });
+              }
+            } catch (error) {
+              // Fallback toast in case of unexpected errors
+              Toast.show({
+                type: "error",
+                text1: "Navigation Error",
+                text2: "An unexpected error occurred.",
+                position: "top",
+              });
+            }
           }}
         >
           Create Account

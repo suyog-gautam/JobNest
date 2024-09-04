@@ -108,7 +108,9 @@ const MyJobs = () => {
   const handleEdit = (job) => {
     navigation.navigate("EditJobs", { job });
   };
-
+  const handleJobPress = (job) => {
+    navigation.navigate("JobDetail", { job });
+  };
   // Skeleton loader layout for job cards
   const renderSkeleton = () => (
     <SkeletonPlaceholder>
@@ -134,7 +136,11 @@ const MyJobs = () => {
           data={jobs}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
-            <TouchableOpacity activeOpacity={0.8} style={styles.card}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={styles.card}
+              onPress={() => handleJobPress(item)}
+            >
               <View style={styles.cardContent}>
                 <View style={styles.jobDetailsContainer}>
                   <Text style={styles.jobTitle}>{item.jobTitle}</Text>

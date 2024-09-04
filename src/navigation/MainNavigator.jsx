@@ -14,6 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 import { BG_COLOR, TEXT_COLOR } from "../utils/colors";
 import Main from "../screens/job-searching/Main";
 import DashboardForCompany from "../screens/job-posting/DashboardForCompany";
+import JobDetail from "../screens/job-posting/tabs/JobDetail";
 const Stack = createStackNavigator();
 
 const MainNavigator = () => {
@@ -92,6 +93,11 @@ const MainNavigator = () => {
                 elevation: 5,
               },
             }}
+          />
+          <Stack.Screen
+            name="JobDetail"
+            component={JobDetail}
+            options={{ headerShown: true }}
           />
         </>
       ) : user?.role === "Recruiter" ? (

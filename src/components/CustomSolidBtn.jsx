@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
     width: "90%",
     height: verticalScale(45),
     backgroundColor: TEXT_COLOR,
+    borderBlockColor: BG_COLOR,
     justifyContent: "center",
     borderRadius: moderateVerticalScale(12),
     marginTop: moderateVerticalScale(10),

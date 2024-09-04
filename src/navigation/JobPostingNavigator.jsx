@@ -10,8 +10,9 @@ import SelectUser from "../screens/onboarding/SelectUser";
 import { useNavigation } from "@react-navigation/native";
 import Main from "../screens/job-searching/Main";
 import MainNavigator from "./MainNavigator";
+import { BG_COLOR, TEXT_COLOR } from "../utils/colors";
 import LoginForCompany from "../screens/job-posting/LoginForCompany";
-
+import JobDetail from "../screens/job-posting/tabs/JobDetail";
 import JobSearchingNavigator from "./JobSearchingNavigator";
 import SignUpForCompany from "../screens/job-posting/SignUpForCompany";
 const Stack = createStackNavigator();
@@ -70,6 +71,25 @@ const JobPostingNavigator = () => {
             name="SelectUser"
             component={SelectUser}
             options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="JobDetail"
+            component={JobDetail}
+            options={{
+              headerShown: true,
+              title: "Job Details ",
+              headerTitleAlign: "center",
+              headerTintColor: TEXT_COLOR,
+              headerStyle: {
+                backgroundColor: BG_COLOR,
+                height: 70,
+                shadowColor: TEXT_COLOR,
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+                elevation: 5,
+              },
+            }}
           />
           <Stack.Screen
             name="JobPostingNavigator"

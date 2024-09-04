@@ -6,7 +6,7 @@ import {
   moderateScale,
   moderateVerticalScale,
 } from "react-native-size-matters";
-import { BG_COLOR } from "../../utils/colors";
+import { BG_COLOR, TEXT_COLOR } from "../../utils/colors";
 import CustomTextInput from "../../components/CustomTextInput";
 import CustomSolidBtn from "../../components/CustomSolidBtn";
 import CustomBorderBtn from "../../components/CustomBorderBtn";
@@ -76,91 +76,97 @@ const SignupForUsers = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Image source={require("../../images/logo.png")} style={styles.logo} />
-      <CustomText style={styles.title}>Create Your Account</CustomText>
+      <ScrollView>
+        <Image source={require("../../images/logo.png")} style={styles.logo} />
+        <CustomText style={styles.title}>Create Your Account</CustomText>
 
-      <Formik
-        initialValues={{
-          name: "",
-          contact: "",
+        <Formik
+          initialValues={{
+            name: "",
+            contact: "",
 
-          email: "",
-          password: "",
-        }}
-        validationSchema={validationSchema}
-        onSubmit={handleSignUp}
-      >
-        {({
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          values,
-          errors,
-          touched,
-          isSubmitting,
-        }) => (
-          <>
-            <CustomTextInput
-              title="Name"
-              placeholder="Jon Doe"
-              value={values.name}
-              onChangeText={handleChange("name")}
-              onBlur={handleBlur("name")}
-              error={touched.name && errors.name}
-            />
-            {touched.name && errors.name ? (
-              <CustomText style={styles.errorMsg}>{errors.name}</CustomText>
-            ) : null}
+            email: "",
+            password: "",
+          }}
+          validationSchema={validationSchema}
+          onSubmit={handleSignUp}
+        >
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+            errors,
+            touched,
+            isSubmitting,
+          }) => (
+            <>
+              <CustomTextInput
+                title="Name"
+                placeholder="Jon Doe"
+                value={values.name}
+                onChangeText={handleChange("name")}
+                onBlur={handleBlur("name")}
+                error={touched.name && errors.name}
+              />
+              {touched.name && errors.name ? (
+                <CustomText style={styles.errorMsg}>{errors.name}</CustomText>
+              ) : null}
 
-            <CustomTextInput
-              title="Contact"
-              placeholder="9811123763"
-              value={values.contact}
-              onChangeText={handleChange("contact")}
-              onBlur={handleBlur("contact")}
-              error={touched.contact && errors.contact}
-            />
-            {touched.contact && errors.contact ? (
-              <CustomText style={styles.errorMsg}>{errors.contact}</CustomText>
-            ) : null}
+              <CustomTextInput
+                title="Contact"
+                placeholder="9811123763"
+                value={values.contact}
+                onChangeText={handleChange("contact")}
+                onBlur={handleBlur("contact")}
+                error={touched.contact && errors.contact}
+              />
+              {touched.contact && errors.contact ? (
+                <CustomText style={styles.errorMsg}>
+                  {errors.contact}
+                </CustomText>
+              ) : null}
 
-            <CustomTextInput
-              title="Email"
-              placeholder="johndoe@gmail.com"
-              value={values.email}
-              onChangeText={handleChange("email")}
-              onBlur={handleBlur("email")}
-              error={touched.email && errors.email}
-            />
-            {touched.email && errors.email ? (
-              <CustomText style={styles.errorMsg}>{errors.email}</CustomText>
-            ) : null}
-            <CustomTextInput
-              title="Password"
-              placeholder="********"
-              value={values.password}
-              onChangeText={handleChange("password")}
-              onBlur={handleBlur("password")}
-              type="password"
-              error={touched.password && errors.password}
-            />
-            {touched.password && errors.password ? (
-              <CustomText style={styles.errorMsg}>{errors.password}</CustomText>
-            ) : null}
-            <CustomSolidBtn
-              title="Create Account"
-              onPress={handleSubmit}
-              disabled={isSubmitting}
-            />
-            <CustomBorderBtn
-              title="Login"
-              onPress={() => navigation.navigate("LoginForUsers")}
-            />
-          </>
-        )}
-      </Formik>
+              <CustomTextInput
+                title="Email"
+                placeholder="johndoe@gmail.com"
+                value={values.email}
+                onChangeText={handleChange("email")}
+                onBlur={handleBlur("email")}
+                error={touched.email && errors.email}
+              />
+              {touched.email && errors.email ? (
+                <CustomText style={styles.errorMsg}>{errors.email}</CustomText>
+              ) : null}
+              <CustomTextInput
+                title="Password"
+                placeholder="********"
+                value={values.password}
+                onChangeText={handleChange("password")}
+                onBlur={handleBlur("password")}
+                type="password"
+                error={touched.password && errors.password}
+              />
+              {touched.password && errors.password ? (
+                <CustomText style={styles.errorMsg}>
+                  {errors.password}
+                </CustomText>
+              ) : null}
+              <CustomSolidBtn
+                title="Create Account"
+                onPress={handleSubmit}
+                disabled={isSubmitting}
+              />
+              <CustomBorderBtn
+                title="Login"
+                onPress={() => navigation.navigate("LoginForUsers")}
+              />
+            </>
+          )}
+        </Formik>
 
-      {loading && <Loader />}
+        {loading && <Loader />}
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -175,10 +181,11 @@ const styles = StyleSheet.create({
     width: scale(70),
     height: scale(70),
     alignSelf: "center",
-    marginTop: moderateVerticalScale(20),
+    marginTop: moderateVerticalScale(0),
     borderRadius: moderateScale(7),
   },
   title: {
+    color: TEXT_COLOR,
     alignSelf: "center",
     fontSize: moderateScale(25),
     marginTop: moderateVerticalScale(30),

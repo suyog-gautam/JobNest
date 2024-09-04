@@ -16,9 +16,7 @@ const DrawerScreen = () => {
       <View style={{ display: selectedTab === "home" ? "flex" : "none" }}>
         <Home />
       </View>
-      <View style={{ display: selectedTab === "send" ? "flex" : "none" }}>
-        <Apply />
-      </View>
+      {selectedTab === "send" && <Apply />}
       <View style={{ display: selectedTab === "chat" ? "flex" : "none" }}>
         <Inbox />
       </View>

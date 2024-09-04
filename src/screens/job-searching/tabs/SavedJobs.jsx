@@ -20,10 +20,10 @@ import { formatDistanceToNow } from "date-fns";
 import CustomText from "../../../utils/CustomText";
 import { doc, onSnapshot, collection } from "firebase/firestore";
 import { UseAuth } from "../../../utils/AuthContext";
-
+import Loader from "../../../utils/Loader";
 const SavedJobs = () => {
   const [savedJobs, setSavedJobs] = useState([]);
-
+  const [loading, setLoading] = useState(true);
   const { user } = UseAuth();
   const navigation = useNavigation();
 
@@ -46,6 +46,7 @@ const SavedJobs = () => {
 
   const fetchJobs = async (jobIds) => {
     try {
+      setLoading(true);
       const jobsRef = collection(firestore, "jobs");
       const unsubscribe = onSnapshot(jobsRef, (querySnapshot) => {
         const jobsList = [];
@@ -61,6 +62,8 @@ const SavedJobs = () => {
       });
     } catch (error) {
       console.error("Error fetching jobs:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -70,6 +73,7 @@ const SavedJobs = () => {
 
   return (
     <View style={styles.container}>
+      {loading && <Loader />}
       <FlatList
         style={{ marginTop: moderateVerticalScale(10) }}
         data={savedJobs}

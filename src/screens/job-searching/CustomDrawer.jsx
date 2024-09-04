@@ -25,10 +25,10 @@ const CustomDrawer = () => {
         />
         <View>
           <CustomText style={styles.headerText}>
-            {user.name ? user.name : "Build Your Profile"}
+            {user?.name ? user.name : "Build Your Profile"}
           </CustomText>
           <CustomText style={styles.subHeaderText}>
-            {user.email
+            {user?.email
               ? user.email
               : "Job Oppurtunity is Waiting for you at Job Nest"}
           </CustomText>
@@ -60,12 +60,12 @@ const CustomDrawer = () => {
           user
             ? { title: "Logout", icon: require("../../images/logout.png") }
             : null,
-        ]}
+        ].filter(Boolean)}
         renderItem={({ item, index }) => {
           return (
             <TouchableOpacity
               style={styles.menuItem}
-              onPress={item.onPress ? item.onPress : null}
+              onPress={item.onPress ? item.onPress : null} // Ensure onPress is defined
             >
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Image source={item.icon} style={styles.icon} />

@@ -67,33 +67,34 @@ const Home = () => {
             </TouchableOpacity>
           </View>
         </>
-      ) : null}
-      <View style={styles.jobsearchCard}>
-        <Image
-          source={require("../../../images/search.gif")}
-          style={styles.gif}
-        />
-        <TextInput
-          placeholder="Enter Job Title"
-          style={styles.input}
-          placeholderTextColor="gray"
-          editable={false}
-        />
-        <TextInput
-          placeholder="Enter Job Type"
-          placeholderTextColor="gray"
-          style={styles.input}
-          editable={false}
-        />
-        <TouchableOpacity
-          style={styles.searchBtn}
-          onPress={() => {
-            navigation.navigate("SearchJobs");
-          }}
-        >
-          <CustomText style={styles.searchBtnText}>Search Jobs</CustomText>
-        </TouchableOpacity>
-      </View>
+      ) : (
+        <View style={styles.jobsearchCard}>
+          <Image
+            source={require("../../../images/search.gif")}
+            style={styles.gif}
+          />
+          <TextInput
+            placeholder="Enter Job Title"
+            style={styles.input}
+            placeholderTextColor="gray"
+            editable={false}
+          />
+          <TextInput
+            placeholder="Enter Job Type"
+            placeholderTextColor="gray"
+            style={styles.input}
+            editable={false}
+          />
+          <TouchableOpacity
+            style={styles.searchBtn}
+            onPress={() => {
+              navigation.navigate("SearchJobs");
+            }}
+          >
+            <CustomText style={styles.searchBtnText}>Search Jobs</CustomText>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };
@@ -214,14 +215,15 @@ const styles = StyleSheet.create({
     backgroundColor: TEXT_COLOR,
     paddingHorizontal: scale(30),
     paddingVertical: scale(10),
-
+    width: "70%",
+    textAlign: "center",
     borderRadius: scale(40),
     marginTop: scale(20),
   },
   searchBtnText: {
     color: BG_COLOR,
-    fontSize: scale(16),
-
+    fontSize: scale(17),
+    textAlign: "center",
     fontFamily: "Poppins_400Regular",
   },
 });
