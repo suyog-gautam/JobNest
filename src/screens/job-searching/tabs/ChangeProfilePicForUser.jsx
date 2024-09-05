@@ -10,9 +10,10 @@ import {
   SafeAreaView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BG_COLOR } from "../../../utils/colors";
+import { getColors } from "../../../utils/colors";
+import { useTheme } from "../../../utils/ThemeContext";
 import { moderateScale, verticalScale, scale } from "react-native-size-matters";
-import { TEXT_COLOR } from "../../../utils/colors";
+
 import CustomText from "../../../utils/CustomText"; // Assuming CustomText is a named export
 import * as ImagePicker from "expo-image-picker";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -24,6 +25,8 @@ import { UseAuth } from "../../../utils/AuthContext";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 
 const ChangeProfilePicForUser = () => {
+  const { theme } = useTheme(); // Access theme
+  const { BG_COLOR, TEXT_COLOR } = getColors(theme);
   const { user } = UseAuth();
   const navigation = useNavigation();
   const [image, setImage] = useState(null);
@@ -32,6 +35,69 @@ const ChangeProfilePicForUser = () => {
   const [uploadEnabled, setUploadEnabled] = useState(false);
   const [uid, setUid] = useState(user?.user?.uid);
   // const[ profilepic, setprofilepic] = useState(null);
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: BG_COLOR,
+    },
+    backArrow: {
+      fontSize: moderateScale(30),
+      color: TEXT_COLOR,
+    },
+    header: {
+      width: "100%",
+      height: verticalScale(45),
+      flexDirection: "row",
+      alignItems: "center",
+      marginTop: moderateScale(30),
+      paddingLeft: moderateScale(20),
+      marginBottom: moderateScale(30),
+    },
+    title: {
+      color: TEXT_COLOR,
+      fontSize: moderateScale(23),
+      fontWeight: "600",
+      marginLeft: scale(15),
+      fontFamily: "Poppins_500Medium",
+    },
+    disabledButton: {
+      backgroundColor: "gray",
+    },
+    profileSection: {
+      justifyContent: "center",
+      alignItems: "center",
+      height: moderateScale(500),
+    },
+    profilePicture: {
+      width: moderateScale(150),
+      height: moderateScale(150),
+      borderRadius: 50,
+      backgroundColor: "#f1f1f1",
+      borderWidth: 1,
+      borderColor: TEXT_COLOR,
+    },
+    actionButtonContainer: {
+      width: "100%",
+      marginTop: verticalScale(20),
+      flexDirection: "row",
+      justifyContent: "space-evenly",
+    },
+    actionButton: {
+      marginTop: verticalScale(20),
+      padding: moderateScale(10),
+      paddingHorizontal: moderateScale(14),
+      borderRadius: moderateScale(12),
+      backgroundColor: TEXT_COLOR,
+      BorderColor: "#34495e",
+      borderWidth: 1,
+    },
+    actionText: {
+      fontSize: moderateScale(14),
+
+      color: BG_COLOR,
+      fontFamily: "Poppins_400Regular",
+    },
+  });
   useEffect(() => {
     const fetchUserData = async () => {
       setLoading(true);
@@ -149,67 +215,3 @@ const ChangeProfilePicForUser = () => {
 };
 
 export default ChangeProfilePicForUser;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: BG_COLOR,
-  },
-  backArrow: {
-    fontSize: moderateScale(30),
-    color: TEXT_COLOR,
-  },
-  header: {
-    width: "100%",
-    height: verticalScale(45),
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: moderateScale(30),
-    paddingLeft: moderateScale(20),
-    marginBottom: moderateScale(30),
-  },
-  title: {
-    color: TEXT_COLOR,
-    fontSize: moderateScale(23),
-    fontWeight: "600",
-    marginLeft: scale(15),
-    fontFamily: "Poppins_500Medium",
-  },
-  disabledButton: {
-    backgroundColor: "gray",
-  },
-  profileSection: {
-    justifyContent: "center",
-    alignItems: "center",
-    height: moderateScale(500),
-  },
-  profilePicture: {
-    width: moderateScale(150),
-    height: moderateScale(150),
-    borderRadius: 50,
-    backgroundColor: "#f1f1f1",
-    borderWidth: 1,
-    borderColor: TEXT_COLOR,
-  },
-  actionButtonContainer: {
-    width: "100%",
-    marginTop: verticalScale(20),
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-  },
-  actionButton: {
-    marginTop: verticalScale(20),
-    padding: moderateScale(10),
-    paddingHorizontal: moderateScale(14),
-    borderRadius: moderateScale(12),
-    backgroundColor: TEXT_COLOR,
-    BorderColor: "#34495e",
-    borderWidth: 1,
-  },
-  actionText: {
-    fontSize: moderateScale(14),
-
-    color: BG_COLOR,
-    fontFamily: "Poppins_400Regular",
-  },
-});

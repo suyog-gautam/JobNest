@@ -5,8 +5,11 @@ import { moderateScale } from "react-native-size-matters";
 import CustomText from "../utils/CustomText";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { TEXT_COLOR } from "../utils/colors";
+import { getColors } from "../utils/colors";
+import { useTheme } from "../utils/ThemeContext";
 const ProfileOptions = ({ title, icon, onClick }) => {
+  const { theme } = useTheme(); // Access theme
+  const { BG_COLOR, TEXT_COLOR } = getColors(theme);
   return (
     <TouchableOpacity
       style={{

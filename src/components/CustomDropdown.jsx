@@ -15,11 +15,77 @@ import {
 } from "react-native-size-matters";
 import CustomText from "../utils/CustomText";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { BG_COLOR, TEXT_COLOR } from "../utils/colors";
+import { getColors } from "../utils/colors";
+import { useTheme } from "@react-navigation/native";
 
 const CustomDropdown = ({ title, placeholder, value, error, onSelect }) => {
+  const { theme } = useTheme(); // Access theme
+  const { BG_COLOR, TEXT_COLOR } = getColors(theme);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
-
+  const styles = StyleSheet.create({
+    inputContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      width: "90%",
+      height: verticalScale(40),
+      borderWidth: 0.5,
+      alignSelf: "center",
+      marginTop: moderateVerticalScale(11),
+      marginBottom: moderateVerticalScale(11),
+      borderRadius: scale(10),
+      paddingLeft: moderateScale(15),
+      paddingRight: moderateScale(15),
+      justifyContent: "center",
+      backgroundColor: BG_COLOR,
+      borderColor: TEXT_COLOR,
+    },
+    inputTitle: {
+      position: "absolute",
+      top: -moderateVerticalScale(9),
+      left: moderateScale(13),
+      backgroundColor: BG_COLOR,
+      paddingHorizontal: moderateScale(5),
+      fontSize: moderateScale(13),
+      color: TEXT_COLOR,
+    },
+    inputText: {
+      color: TEXT_COLOR,
+      flex: 1,
+      textAlign: "left",
+      marginRight: moderateScale(15),
+      marginLeft: moderateScale(5),
+      fontSize: moderateScale(13),
+      fontFamily: "Poppins_400Regular",
+    },
+    icon: {
+      fontSize: 24,
+      position: "absolute",
+      right: 10,
+      color: TEXT_COLOR,
+    },
+    modalBackground: {
+      flex: 1,
+      backgroundColor: "rgba(0,0,0,0.5)",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    dropdownContainer: {
+      width: "80%",
+      backgroundColor: BG_COLOR,
+      borderRadius: 10,
+      padding: 10,
+      maxHeight: "70%",
+    },
+    dropdownItem: {
+      padding: 15,
+      borderBottomWidth: 1,
+      borderBottomColor: TEXT_COLOR,
+    },
+    dropdownText: {
+      fontSize: 16,
+      color: TEXT_COLOR,
+    },
+  });
   const toggleDropdown = () => {
     setIsDropdownVisible(!isDropdownVisible);
   };
@@ -72,70 +138,6 @@ const CustomDropdown = ({ title, placeholder, value, error, onSelect }) => {
   );
 };
 
-const styles = StyleSheet.create({
-  inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    width: "90%",
-    height: verticalScale(40),
-    borderWidth: 0.5,
-    alignSelf: "center",
-    marginTop: moderateVerticalScale(11),
-    marginBottom: moderateVerticalScale(11),
-    borderRadius: scale(10),
-    paddingLeft: moderateScale(15),
-    paddingRight: moderateScale(15),
-    justifyContent: "center",
-    backgroundColor: BG_COLOR,
-    borderColor: TEXT_COLOR,
-  },
-  inputTitle: {
-    position: "absolute",
-    top: -moderateVerticalScale(9),
-    left: moderateScale(13),
-    backgroundColor: BG_COLOR,
-    paddingHorizontal: moderateScale(5),
-    fontSize: moderateScale(13),
-    color: TEXT_COLOR,
-  },
-  inputText: {
-    color: TEXT_COLOR,
-    flex: 1,
-    textAlign: "left",
-    marginRight: moderateScale(15),
-    marginLeft: moderateScale(5),
-    fontSize: moderateScale(13),
-    fontFamily: "Poppins_400Regular",
-  },
-  icon: {
-    fontSize: 24,
-    position: "absolute",
-    right: 10,
-    color: TEXT_COLOR,
-  },
-  modalBackground: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  dropdownContainer: {
-    width: "80%",
-    backgroundColor: BG_COLOR,
-    borderRadius: 10,
-    padding: 10,
-    maxHeight: "70%",
-  },
-  dropdownItem: {
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: TEXT_COLOR,
-  },
-  dropdownText: {
-    fontSize: 16,
-    color: TEXT_COLOR,
-  },
-});
 export const Profiles = [
   {
     category: "Web Development",

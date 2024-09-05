@@ -13,8 +13,9 @@ import {
   Poppins_400Regular,
   Poppins_500Medium,
   Poppins_700Bold,
+  Poppins_600SemiBold,
 } from "@expo-google-fonts/poppins";
-
+import { ThemeContextProvider } from "./src/utils/ThemeContext";
 SplashScreen.preventAutoHideAsync(); // Prevent splash screen auto-hide
 
 const App = () => {
@@ -22,6 +23,7 @@ const App = () => {
     Poppins_500Medium,
     Poppins_400Regular,
     Poppins_700Bold,
+    Poppins_600SemiBold,
   });
 
   const [appIsReady, setAppIsReady] = useState(false);
@@ -57,10 +59,12 @@ const App = () => {
   return (
     <View style={styles.container}>
       <NavigationContainer ref={navigationRef}>
-        <AuthProvider>
-          <MainNavigator />
-          <Toast />
-        </AuthProvider>
+        <ThemeContextProvider>
+          <AuthProvider>
+            <MainNavigator />
+            <Toast />
+          </AuthProvider>
+        </ThemeContextProvider>
       </NavigationContainer>
     </View>
   );

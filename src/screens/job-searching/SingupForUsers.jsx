@@ -6,7 +6,8 @@ import {
   moderateScale,
   moderateVerticalScale,
 } from "react-native-size-matters";
-import { BG_COLOR, TEXT_COLOR } from "../../utils/colors";
+import { getColors } from "../../utils/colors";
+import { useTheme } from "../../utils/ThemeContext";
 import CustomTextInput from "../../components/CustomTextInput";
 import CustomSolidBtn from "../../components/CustomSolidBtn";
 import CustomBorderBtn from "../../components/CustomBorderBtn";
@@ -23,6 +24,35 @@ const emailRegex =
 
 const SignupForUsers = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
+  const { theme } = useTheme(); // Access theme
+  const { BG_COLOR, TEXT_COLOR } = getColors(theme);
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: BG_COLOR,
+      padding: moderateScale(20),
+    },
+    logo: {
+      width: scale(70),
+      height: scale(70),
+      alignSelf: "center",
+      marginTop: moderateVerticalScale(0),
+      borderRadius: moderateScale(7),
+    },
+    title: {
+      color: TEXT_COLOR,
+      alignSelf: "center",
+      fontSize: moderateScale(25),
+      marginTop: moderateVerticalScale(30),
+      fontWeight: "600",
+      marginBottom: moderateVerticalScale(20),
+    },
+    errorMsg: {
+      color: "red",
+      marginLeft: moderateScale(30),
+      marginBottom: moderateVerticalScale(10),
+    },
+  });
 
   // Revised Validation schema without companyName
   const validationSchema = Yup.object().shape({
@@ -170,33 +200,5 @@ const SignupForUsers = ({ navigation }) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: BG_COLOR,
-    padding: moderateScale(20),
-  },
-  logo: {
-    width: scale(70),
-    height: scale(70),
-    alignSelf: "center",
-    marginTop: moderateVerticalScale(0),
-    borderRadius: moderateScale(7),
-  },
-  title: {
-    color: TEXT_COLOR,
-    alignSelf: "center",
-    fontSize: moderateScale(25),
-    marginTop: moderateVerticalScale(30),
-    fontWeight: "600",
-    marginBottom: moderateVerticalScale(20),
-  },
-  errorMsg: {
-    color: "red",
-    marginLeft: moderateScale(30),
-    marginBottom: moderateVerticalScale(10),
-  },
-});
 
 export default SignupForUsers;

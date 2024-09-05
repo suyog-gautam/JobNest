@@ -10,16 +10,78 @@ import {
 import { moderateScale, verticalScale } from "react-native-size-matters";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CustomText from "../../../utils/CustomText";
-import { BG_COLOR, TEXT_COLOR } from "../../../utils/colors";
+import { getColors } from "../../../utils/colors";
+import { useTheme } from "../../../utils/ThemeContext";
 import ProfileOptions from "../../../components/ProfileOptions";
 import { useNavigation } from "@react-navigation/native";
 import Loader from "../../../utils/Loader";
 const Profile = ({ onJobClick }) => {
+  const { theme, setTheme } = useTheme(); // Access theme
+  const { BG_COLOR, TEXT_COLOR } = getColors(theme);
   const navigation = useNavigation();
   const [userData, setUserData] = useState(null);
   const [totalJobs, setTotalJobs] = useState(0);
   const [loading, setLoading] = useState(false);
   const [profilePictureUrl, setProfilePictureUrl] = useState(null);
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: BG_COLOR,
+      padding: moderateScale(20),
+    },
+    header: {
+      marginTop: verticalScale(10),
+      alignItems: "center",
+      marginBottom: verticalScale(20),
+    },
+    headerText: {
+      fontSize: moderateScale(26),
+      fontWeight: "700",
+      fontFamily: "Poppins_600Bold",
+      color: TEXT_COLOR,
+    },
+    profileSection: {
+      justifyContent: "center",
+      alignItems: "center",
+      marginBottom: verticalScale(40),
+    },
+    profilePicture: {
+      width: moderateScale(90),
+      height: moderateScale(90),
+      borderRadius: moderateScale(50),
+      backgroundColor: "#f1f1f1",
+      borderWidth: 1,
+      borderColor: TEXT_COLOR,
+    },
+    userName: {
+      fontSize: moderateScale(20),
+      color: TEXT_COLOR,
+      fontWeight: "700",
+      fontFamily: "Poppins_600Medium",
+      marginTop: verticalScale(10),
+    },
+    actionButtonContainer: {
+      width: "100%",
+      marginTop: verticalScale(20),
+      flexDirection: "row",
+      justifyContent: "space-evenly",
+    },
+    actionButton: {
+      padding: moderateScale(10),
+      paddingHorizontal: moderateScale(14),
+      borderRadius: moderateScale(12),
+      backgroundColor: TEXT_COLOR,
+      BorderColor: "#34495e",
+      borderWidth: 1,
+    },
+    actionText: {
+      fontSize: moderateScale(14),
+
+      color: BG_COLOR,
+      fontFamily: "Poppins_400Regular",
+    },
+  });
+
   useEffect(() => {
     const fetchUserData = async () => {
       setLoading(true);
@@ -87,7 +149,9 @@ const Profile = ({ onJobClick }) => {
       { cancelable: true }
     );
   };
-
+  const handleAppTheme = () => {
+    setTheme(theme === "light" ? "dark" : "light");
+  };
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -126,13 +190,11 @@ const Profile = ({ onJobClick }) => {
           onJobClick();
         }}
       />
-      <ProfileOptions
-        title="Contact"
-        icon={require("../../../images/contact.png")}
-      />
+
       <ProfileOptions
         title="App Theme"
         icon={require("../../../images/theme.png")}
+        onClick={handleAppTheme}
       />
       <ProfileOptions
         title="Log Out"
@@ -144,62 +206,3 @@ const Profile = ({ onJobClick }) => {
 };
 
 export default Profile;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: BG_COLOR,
-    padding: moderateScale(20),
-  },
-  header: {
-    marginTop: verticalScale(10),
-    alignItems: "center",
-    marginBottom: verticalScale(20),
-  },
-  headerText: {
-    fontSize: moderateScale(26),
-    fontWeight: "700",
-    fontFamily: "Poppins_600Bold",
-    color: TEXT_COLOR,
-  },
-  profileSection: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: verticalScale(40),
-  },
-  profilePicture: {
-    width: moderateScale(90),
-    height: moderateScale(90),
-    borderRadius: moderateScale(50),
-    backgroundColor: "#f1f1f1",
-    borderWidth: 1,
-    borderColor: TEXT_COLOR,
-  },
-  userName: {
-    fontSize: moderateScale(20),
-    color: TEXT_COLOR,
-    fontWeight: "700",
-    fontFamily: "Poppins_600Medium",
-    marginTop: verticalScale(10),
-  },
-  actionButtonContainer: {
-    width: "100%",
-    marginTop: verticalScale(20),
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-  },
-  actionButton: {
-    padding: moderateScale(10),
-    paddingHorizontal: moderateScale(14),
-    borderRadius: moderateScale(12),
-    backgroundColor: TEXT_COLOR,
-    BorderColor: "#34495e",
-    borderWidth: 1,
-  },
-  actionText: {
-    fontSize: moderateScale(14),
-
-    color: BG_COLOR,
-    fontFamily: "Poppins_400Regular",
-  },
-});

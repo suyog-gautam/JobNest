@@ -11,8 +11,11 @@ import { UseAuth } from "../utils/AuthContext";
 import ChangeProfilePicForUser from "../screens/job-searching/tabs/ChangeProfilePicForUser";
 import ManageResume from "../screens/job-searching/tabs/ManageResume";
 import SelectUser from "../screens/onboarding/SelectUser";
-
+import { getColors } from "../utils/colors";
+import { useTheme } from "../utils/ThemeContext";
 const JobSearchingNavigator = () => {
+  const { theme } = useTheme(); // Access theme
+  const { BG_COLOR, TEXT_COLOR } = getColors(theme);
   const Stack = createStackNavigator();
   const { user } = UseAuth();
 
@@ -26,45 +29,48 @@ const JobSearchingNavigator = () => {
       />
 
       {/* Conditionally show Login and Signup only if user is not logged in */}
-
-      <Stack.Screen
-        name="LoginForUsers"
-        component={LoginForUsers}
-        options={{
-          headerShown: true,
-          title: "Login",
-          headerTitleAlign: "center",
-          headerTintColor: TEXT_COLOR,
-          headerStyle: {
-            backgroundColor: BG_COLOR,
-            height: 70,
-            shadowColor: TEXT_COLOR,
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-            elevation: 5,
-          },
-        }}
-      />
-      <Stack.Screen
-        name="SignupForUsers"
-        component={SingupForUsers}
-        options={{
-          headerShown: true,
-          title: "Create Account",
-          headerTitleAlign: "center",
-          headerTintColor: TEXT_COLOR,
-          headerStyle: {
-            backgroundColor: BG_COLOR,
-            height: 70,
-            shadowColor: TEXT_COLOR,
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-            elevation: 5,
-          },
-        }}
-      />
+      {!user && (
+        <>
+          <Stack.Screen
+            name="LoginForUsers"
+            component={LoginForUsers}
+            options={{
+              headerShown: true,
+              title: "Login",
+              headerTitleAlign: "center",
+              headerTintColor: TEXT_COLOR,
+              headerStyle: {
+                backgroundColor: BG_COLOR,
+                height: 70,
+                shadowColor: TEXT_COLOR,
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+                elevation: 5,
+              },
+            }}
+          />
+          <Stack.Screen
+            name="SignupForUsers"
+            component={SingupForUsers}
+            options={{
+              headerShown: true,
+              title: "Create Account",
+              headerTitleAlign: "center",
+              headerTintColor: TEXT_COLOR,
+              headerStyle: {
+                backgroundColor: BG_COLOR,
+                height: 70,
+                shadowColor: TEXT_COLOR,
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+                elevation: 5,
+              },
+            }}
+          />
+        </>
+      )}
 
       {/* These screens should always be accessible */}
       <Stack.Screen

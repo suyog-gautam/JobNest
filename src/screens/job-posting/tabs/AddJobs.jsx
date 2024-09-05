@@ -18,7 +18,8 @@ import CustomTextInput from "../../../components/CustomTextInput";
 import CustomDropdown from "../../../components/CustomDropdown";
 import CustomSolidBtn from "../../../components/CustomSolidBtn";
 import CustomText from "../../../utils/CustomText";
-import { BG_COLOR, TEXT_COLOR } from "../../../utils/colors";
+import { getColors } from "../../../utils/colors";
+import { useTheme } from "../../../utils/ThemeContext";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useNavigation } from "@react-navigation/native";
@@ -43,6 +44,37 @@ const AddJobs = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [loading, setLoading] = useState(false);
   const [parsedUser, setParsedUser] = useState(null);
+  const { theme } = useTheme(); // Access theme
+  const { BG_COLOR, TEXT_COLOR } = getColors(theme);
+  const styles = StyleSheet.create({
+    container: { flex: 1, backgroundColor: BG_COLOR },
+    backArrow: {
+      width: 30,
+      height: 30,
+
+      color: TEXT_COLOR,
+    },
+    header: {
+      width: "100%",
+      height: verticalScale(45),
+      flexDirection: "row",
+      alignItems: "center",
+      marginTop: moderateScale(25),
+      paddingLeft: moderateScale(20),
+    },
+    title: {
+      color: TEXT_COLOR,
+      fontSize: moderateScale(23),
+      fontWeight: "600",
+      marginLeft: scale(15),
+      fontFamily: "Poppins_500Medium",
+    },
+
+    errorMsg: {
+      color: "red",
+      marginLeft: moderateScale(25),
+    },
+  });
   useEffect(() => {
     // Retrieve user data from AsyncStorage
     const fetchUserData = async () => {
@@ -292,33 +324,3 @@ const AddJobs = () => {
   );
 };
 export default AddJobs;
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: BG_COLOR },
-  backArrow: {
-    width: 30,
-    height: 30,
-
-    color: TEXT_COLOR,
-  },
-  header: {
-    width: "100%",
-    height: verticalScale(45),
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: moderateScale(25),
-    paddingLeft: moderateScale(20),
-  },
-  title: {
-    color: TEXT_COLOR,
-    fontSize: moderateScale(23),
-    fontWeight: "600",
-    marginLeft: scale(15),
-    fontFamily: "Poppins_500Medium",
-  },
-
-  errorMsg: {
-    color: "red",
-    marginLeft: moderateScale(25),
-  },
-});

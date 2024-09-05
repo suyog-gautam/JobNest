@@ -2,7 +2,7 @@ import { View, Text, Modal, ActivityIndicator } from "react-native";
 import React from "react";
 import { scale, moderateScale } from "react-native-size-matters";
 import CustomText from "./CustomText";
-import { BG_COLOR } from "./colors";
+
 const Loader = () => {
   return (
     <Modal transparent={true} animationType="none">

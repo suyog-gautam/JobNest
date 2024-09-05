@@ -8,7 +8,8 @@ import {
   moderateScale,
   moderateVerticalScale,
 } from "react-native-size-matters";
-import { BG_COLOR, TEXT_COLOR } from "../../utils/colors";
+import { getColors } from "../../utils/colors";
+import { useTheme } from "../../utils/ThemeContext";
 import CustomTextInput from "../../components/CustomTextInput";
 import CustomSolidBtn from "../../components/CustomSolidBtn";
 import CustomText from "../../utils/CustomText";
@@ -20,10 +21,46 @@ import AsyncStorage from "@react-native-async-storage/async-storage"; // Added i
 import Loader from "../../utils/Loader"; // Added import for Loader
 import firestore from "@react-native-firebase/firestore";
 const LoginForUsers = () => {
+  const { theme } = useTheme(); // Access theme
+  const { BG_COLOR, TEXT_COLOR } = getColors(theme);
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const route = useRoute();
-
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: BG_COLOR,
+    },
+    logo: {
+      width: scale(70),
+      height: scale(70),
+      alignSelf: "center",
+      marginTop: moderateVerticalScale(70),
+      borderRadius: moderateScale(7),
+    },
+    title: {
+      alignSelf: "center",
+      fontSize: moderateScale(25),
+      marginTop: moderateVerticalScale(50),
+      color: TEXT_COLOR,
+      fontWeight: "600",
+    },
+    forgotPasswordContainer: {
+      alignSelf: "flex-end",
+      marginRight: moderateScale(20),
+      marginTop: moderateScale(13),
+    },
+    forgotPasswordText: {
+      color: TEXT_COLOR,
+      fontWeight: "500",
+      fontSize: moderateScale(14),
+      textDecorationLine: "underline",
+    },
+    errorMsg: {
+      color: "red",
+      marginLeft: moderateScale(30),
+    },
+  });
   // Show the toast when navigated to this page from SignUp
   useEffect(() => {
     if (route.params?.toastMessage) {
@@ -149,39 +186,3 @@ const LoginForUsers = () => {
 };
 
 export default LoginForUsers;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: BG_COLOR,
-  },
-  logo: {
-    width: scale(70),
-    height: scale(70),
-    alignSelf: "center",
-    marginTop: moderateVerticalScale(70),
-    borderRadius: moderateScale(7),
-  },
-  title: {
-    alignSelf: "center",
-    fontSize: moderateScale(25),
-    marginTop: moderateVerticalScale(50),
-    color: TEXT_COLOR,
-    fontWeight: "600",
-  },
-  forgotPasswordContainer: {
-    alignSelf: "flex-end",
-    marginRight: moderateScale(20),
-    marginTop: moderateScale(13),
-  },
-  forgotPasswordText: {
-    color: TEXT_COLOR,
-    fontWeight: "500",
-    fontSize: moderateScale(14),
-    textDecorationLine: "underline",
-  },
-  errorMsg: {
-    color: "red",
-    marginLeft: moderateScale(30),
-  },
-});

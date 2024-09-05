@@ -15,7 +15,8 @@ import {
 import CustomTextInput from "../../../components/CustomTextInput";
 import CustomSolidBtn from "../../../components/CustomSolidBtn";
 import CustomText from "../../../utils/CustomText";
-import { BG_COLOR, TEXT_COLOR } from "../../../utils/colors";
+import { getColors } from "../../../utils/colors";
+import { useTheme } from "../../../utils/ThemeContext";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useNavigation } from "@react-navigation/native";
@@ -27,11 +28,42 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialIcons } from "@expo/vector-icons";
 
 const EditProfile = () => {
+  const { theme } = useTheme(); // Access theme
+  const { BG_COLOR, TEXT_COLOR } = getColors(theme);
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const [parsedUser, setParsedUser] = useState(null);
   const [uid, setUid] = useState(null);
-
+  const styles = StyleSheet.create({
+    container: { flex: 1, backgroundColor: BG_COLOR, justifyContent: "center" },
+    backArrow: {
+      fontSize: moderateScale(30),
+      color: TEXT_COLOR,
+    },
+    header: {
+      width: "100%",
+      height: verticalScale(45),
+      flexDirection: "row",
+      alignItems: "center",
+      marginTop: moderateScale(25),
+      paddingLeft: moderateScale(20),
+      marginBottom: moderateScale(30),
+    },
+    title: {
+      color: TEXT_COLOR,
+      fontSize: moderateScale(23),
+      fontWeight: "600",
+      marginLeft: scale(15),
+      fontFamily: "Poppins_500Medium",
+    },
+    errorMsg: {
+      color: "red",
+      marginLeft: moderateScale(25),
+    },
+    scrollView: {
+      paddingBottom: moderateVerticalScale(40),
+    },
+  });
   useEffect(() => {
     // Retrieve user data from Firestore
     const fetchUserData = async () => {
@@ -207,34 +239,3 @@ const EditProfile = () => {
 };
 
 export default EditProfile;
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: BG_COLOR, justifyContent: "center" },
-  backArrow: {
-    fontSize: moderateScale(30),
-    color: TEXT_COLOR,
-  },
-  header: {
-    width: "100%",
-    height: verticalScale(45),
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: moderateScale(25),
-    paddingLeft: moderateScale(20),
-    marginBottom: moderateScale(30),
-  },
-  title: {
-    color: TEXT_COLOR,
-    fontSize: moderateScale(23),
-    fontWeight: "600",
-    marginLeft: scale(15),
-    fontFamily: "Poppins_500Medium",
-  },
-  errorMsg: {
-    color: "red",
-    marginLeft: moderateScale(25),
-  },
-  scrollView: {
-    paddingBottom: moderateVerticalScale(40),
-  },
-});

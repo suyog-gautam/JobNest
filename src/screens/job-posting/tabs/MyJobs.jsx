@@ -15,14 +15,121 @@ import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import Loader from "../../../utils/Loader";
-import { BG_COLOR, TEXT_COLOR } from "../../../utils/colors";
+import { getColors } from "../../../utils/colors";
+import { useTheme } from "../../../utils/ThemeContext";
 const MyJobs = () => {
+  const { theme } = useTheme(); // Access theme
+  const { BG_COLOR, TEXT_COLOR } = getColors(theme);
   const [loading, setLoading] = useState(false);
   const [skeletonLoading, setSkeletonLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [jobs, setJobs] = useState([]);
   const navigation = useNavigation();
-
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: BG_COLOR,
+      paddingHorizontal: moderateScale(10),
+      marginBottom: moderateScale(90),
+    },
+    header: {
+      paddingVertical: moderateScale(15),
+      marginTop: moderateScale(20),
+      alignItems: "center",
+    },
+    headerText: {
+      fontSize: moderateScale(26),
+      fontWeight: "700",
+      fontFamily: "Poppins_600Bold",
+      color: TEXT_COLOR,
+    },
+    card: {
+      backgroundColor: BG_COLOR,
+      padding: moderateScale(20),
+      borderRadius: moderateScale(15),
+      marginVertical: moderateScale(12),
+      marginHorizontal: moderateScale(5),
+      borderWidth: 1,
+      borderColor: "#E0E0E0",
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.1,
+      shadowRadius: 8,
+      elevation: 6,
+    },
+    cardContent: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      flex: 1,
+    },
+    jobDetailsContainer: {
+      flex: 1,
+    },
+    jobTitle: {
+      fontFamily: "Poppins_600SemiBold",
+      fontSize: moderateScale(18),
+      marginBottom: moderateScale(8),
+      color: "#81a8bd",
+    },
+    jobDetails: {
+      fontFamily: "Poppins_400Regular",
+      fontSize: moderateScale(14),
+      color: "#7f8c8d",
+      marginBottom: moderateScale(4),
+    },
+    tagsContainer: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      marginTop: moderateScale(10),
+    },
+    tag: {
+      backgroundColor: "#f0f4f8",
+      borderRadius: moderateScale(5),
+      paddingHorizontal: moderateScale(10),
+      paddingVertical: moderateScale(5),
+      marginRight: moderateScale(5),
+      marginBottom: moderateScale(5),
+    },
+    tagText: {
+      color: "#2c3e50",
+      fontFamily: "Poppins_400Regular",
+      fontSize: moderateScale(12),
+    },
+    actionsContainer: {
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    actionButton: {
+      marginBottom: moderateScale(10),
+    },
+    emptyState: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    noJobsText: {
+      textAlign: "center",
+      fontSize: moderateScale(16),
+      color: "#888",
+    },
+    skeletonCard: {
+      width: "100%",
+      height: moderateScale(200),
+      borderRadius: moderateScale(15),
+      marginVertical: moderateScale(12),
+      backgroundColor: "#ffffff",
+      padding: moderateScale(20),
+      marginVertical: moderateScale(12),
+      marginHorizontal: moderateScale(5),
+      borderWidth: 1,
+      borderColor: "#E0E0E0",
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.1,
+      shadowRadius: 8,
+      elevation: 6,
+    },
+  });
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -184,109 +291,3 @@ const MyJobs = () => {
 };
 
 export default MyJobs;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: BG_COLOR,
-    paddingHorizontal: moderateScale(10),
-    marginBottom: moderateScale(90),
-  },
-  header: {
-    paddingVertical: moderateScale(15),
-    marginTop: moderateScale(20),
-    alignItems: "center",
-  },
-  headerText: {
-    fontSize: moderateScale(26),
-    fontWeight: "700",
-    fontFamily: "Poppins_600Bold",
-    color: TEXT_COLOR,
-  },
-  card: {
-    backgroundColor: BG_COLOR,
-    padding: moderateScale(20),
-    borderRadius: moderateScale(15),
-    marginVertical: moderateScale(12),
-    marginHorizontal: moderateScale(5),
-    borderWidth: 1,
-    borderColor: "#E0E0E0",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 6,
-  },
-  cardContent: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    flex: 1,
-  },
-  jobDetailsContainer: {
-    flex: 1,
-  },
-  jobTitle: {
-    fontFamily: "Poppins_600Bold",
-    fontSize: moderateScale(18),
-    marginBottom: moderateScale(8),
-    color: "#34495e",
-  },
-  jobDetails: {
-    fontFamily: "Poppins_400Regular",
-    fontSize: moderateScale(14),
-    color: "#7f8c8d",
-    marginBottom: moderateScale(4),
-  },
-  tagsContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    marginTop: moderateScale(10),
-  },
-  tag: {
-    backgroundColor: "#f0f4f8",
-    borderRadius: moderateScale(5),
-    paddingHorizontal: moderateScale(10),
-    paddingVertical: moderateScale(5),
-    marginRight: moderateScale(5),
-    marginBottom: moderateScale(5),
-  },
-  tagText: {
-    color: "#2c3e50",
-    fontFamily: "Poppins_400Regular",
-    fontSize: moderateScale(12),
-  },
-  actionsContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  actionButton: {
-    marginBottom: moderateScale(10),
-  },
-  emptyState: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  noJobsText: {
-    textAlign: "center",
-    fontSize: moderateScale(16),
-    color: "#888",
-  },
-  skeletonCard: {
-    width: "100%",
-    height: moderateScale(200),
-    borderRadius: moderateScale(15),
-    marginVertical: moderateScale(12),
-    backgroundColor: "#ffffff",
-    padding: moderateScale(20),
-    marginVertical: moderateScale(12),
-    marginHorizontal: moderateScale(5),
-    borderWidth: 1,
-    borderColor: "#E0E0E0",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 6,
-  },
-});

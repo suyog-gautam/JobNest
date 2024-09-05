@@ -9,18 +9,86 @@ import {
 import { verticalScale, scale } from "react-native-size-matters";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Loader from "../../utils/Loader";
-import { BG_COLOR, TEXT_COLOR } from "../../utils/colors";
+import { getColors } from "../../utils/colors";
+import { useTheme } from "../../utils/ThemeContext";
 import MyJobs from "./tabs/MyJobs";
 import SearchCandidates from "./tabs/SearchCandidates";
-import Chat from "./tabs/Chat";
+import Submissions from "./tabs/Submissions";
 import Profile from "./tabs/Profile";
 import { useNavigation } from "@react-navigation/native";
 
 const DashboardForCompany = () => {
+  const { theme } = useTheme(); // Access theme
+  const { BG_COLOR, TEXT_COLOR } = getColors(theme);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [selectedTab, setSelectedTab] = useState("home");
   const navigation = useNavigation(); // Correct spelling
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: BG_COLOR,
+    },
+    visible: {
+      opacity: 1,
+      height: "100%",
+    },
+    hidden: {
+      opacity: 0, // Make it invisible but still occupy space
+      height: 0, // Shrink the height to remove it from the layout
+    },
+    bottomView: {
+      backgroundColor: BG_COLOR,
+      width: "100%",
+      height: verticalScale(50),
+      position: "absolute",
+      bottom: 0,
+      shadowColor: "rgba(0, 0, 0, 0.5)",
+      shadowOpacity: 0.8,
+      shadowOffset: {
+        width: 0,
+        height: -10,
+      },
+      shadowRadius: 5,
+      elevation: 10,
+      flexDirection: "row",
+      justifyContent: "space-evenly",
+      alignItems: "center",
+    },
+    bottomTab: {
+      height: "100%",
+      width: "20%",
+      justifyContent: "center",
+      alignItems: "center",
+      borderTopColor: "grey",
+      borderTopWidth: 2.5,
+    },
+    tabIcon: {
+      width: scale(25),
+      height: scale(25),
+      tintColor: "grey",
+    },
+    activeTab: {
+      borderTopColor: "red",
+      borderTopWidth: 3,
+    },
+    activeIcon: {
+      tintColor: "red",
+    },
+    addTab: {
+      height: "100%",
+      width: "20%",
+      justifyContent: "center",
+      alignItems: "center",
+      borderTopColor: "grey",
+      borderTopWidth: 2.5,
+    },
+    addIcon: {
+      width: scale(28),
+      height: scale(28),
+      tintColor: TEXT_COLOR, // Always black color for add button
+    },
+  });
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -51,16 +119,49 @@ const DashboardForCompany = () => {
   return (
     <SafeAreaView style={styles.container}>
       {loading && <Loader />}
-      {selectedTab === "home" && <MyJobs />}
-      {selectedTab === "search" && <SearchCandidates />}
-      {selectedTab === "chat" && <Chat />}
-      {selectedTab === "profile" && (
+      {/* Home Tab */}
+      <View
+        style={[
+          styles.tabContent,
+          selectedTab === "home" ? styles.visible : styles.hidden,
+        ]}
+      >
+        <MyJobs />
+      </View>
+
+      {/* Search Tab */}
+      <View
+        style={[
+          styles.tabContent,
+          selectedTab === "search" ? styles.visible : styles.hidden,
+        ]}
+      >
+        <SearchCandidates />
+      </View>
+
+      {/* Submissions Tab */}
+      <View
+        style={[
+          styles.tabContent,
+          selectedTab === "chat" ? styles.visible : styles.hidden,
+        ]}
+      >
+        <Submissions />
+      </View>
+
+      {/* Profile Tab */}
+      <View
+        style={[
+          styles.tabContent,
+          selectedTab === "profile" ? styles.visible : styles.hidden,
+        ]}
+      >
         <Profile
           onJobClick={() => {
             setSelectedTab("home");
           }}
         />
-      )}
+      </View>
 
       <View style={styles.bottomView}>
         <TouchableOpacity
@@ -104,7 +205,7 @@ const DashboardForCompany = () => {
           onPress={() => handleTabPress("chat")}
         >
           <Image
-            source={require("../../images/chat.png")}
+            source={require("../../images/notification.png")}
             style={[
               styles.tabIcon,
               selectedTab === "chat" && styles.activeIcon,
@@ -133,61 +234,3 @@ const DashboardForCompany = () => {
 };
 
 export default DashboardForCompany;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: BG_COLOR,
-  },
-  bottomView: {
-    backgroundColor: BG_COLOR,
-    width: "100%",
-    height: verticalScale(50),
-    position: "absolute",
-    bottom: 0,
-    shadowColor: "rgba(0, 0, 0, 0.5)",
-    shadowOpacity: 0.8,
-    shadowOffset: {
-      width: 0,
-      height: -10,
-    },
-    shadowRadius: 5,
-    elevation: 10,
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    alignItems: "center",
-  },
-  bottomTab: {
-    height: "100%",
-    width: "20%",
-    justifyContent: "center",
-    alignItems: "center",
-    borderTopColor: "grey",
-    borderTopWidth: 2.5,
-  },
-  tabIcon: {
-    width: scale(25),
-    height: scale(25),
-    tintColor: "grey",
-  },
-  activeTab: {
-    borderTopColor: "red",
-    borderTopWidth: 3,
-  },
-  activeIcon: {
-    tintColor: "red",
-  },
-  addTab: {
-    height: "100%",
-    width: "20%",
-    justifyContent: "center",
-    alignItems: "center",
-    borderTopColor: "grey",
-    borderTopWidth: 2.5,
-  },
-  addIcon: {
-    width: scale(28),
-    height: scale(28),
-    tintColor: TEXT_COLOR, // Always black color for add button
-  },
-});

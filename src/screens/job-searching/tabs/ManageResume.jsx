@@ -10,7 +10,8 @@ import {
   Linking,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BG_COLOR, TEXT_COLOR } from "../../../utils/colors";
+import { getColors } from "../../../utils/colors";
+import { useTheme } from "../../../utils/ThemeContext";
 import { moderateScale, verticalScale } from "react-native-size-matters";
 import CustomText from "../../../utils/CustomText";
 import Loader from "../../../utils/Loader";
@@ -23,6 +24,8 @@ import * as FileSystem from "expo-file-system";
 import { UseAuth } from "../../../utils/AuthContext";
 
 const ManageResume = () => {
+  const { theme } = useTheme(); // Access theme
+  const { BG_COLOR, TEXT_COLOR } = getColors(theme);
   const navigation = useNavigation();
   const [resume, setResume] = useState(null); // For selected resume
   const [resumeUrl, setResumeUrl] = useState(null); // For displaying resume
@@ -30,7 +33,40 @@ const ManageResume = () => {
   const [uploadEnabled, setUploadEnabled] = useState(false);
   const [uid, setUid] = useState(null);
   const { user } = UseAuth();
-
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: BG_COLOR,
+    },
+    disabledButton: {
+      backgroundColor: "gray",
+    },
+    resumeSection: {
+      justifyContent: "center",
+      alignItems: "center",
+      height: moderateScale(500),
+    },
+    resumeText: {
+      color: TEXT_COLOR,
+      fontSize: moderateScale(18),
+      marginBottom: verticalScale(20),
+      fontFamily: "Poppins_600Medium",
+    },
+    actionButton: {
+      marginTop: verticalScale(20),
+      padding: moderateScale(10),
+      paddingHorizontal: moderateScale(14),
+      borderRadius: moderateScale(12),
+      backgroundColor: TEXT_COLOR,
+      borderColor: "#34495e",
+      borderWidth: 1,
+    },
+    actionText: {
+      fontSize: moderateScale(14),
+      color: BG_COLOR,
+      fontFamily: "Poppins_400Regular",
+    },
+  });
   useEffect(() => {
     const fetchUserData = async () => {
       setLoading(true);
@@ -166,38 +202,3 @@ const ManageResume = () => {
 };
 
 export default ManageResume;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: BG_COLOR,
-  },
-  disabledButton: {
-    backgroundColor: "gray",
-  },
-  resumeSection: {
-    justifyContent: "center",
-    alignItems: "center",
-    height: moderateScale(500),
-  },
-  resumeText: {
-    color: TEXT_COLOR,
-    fontSize: moderateScale(18),
-    marginBottom: verticalScale(20),
-    fontFamily: "Poppins_600Medium",
-  },
-  actionButton: {
-    marginTop: verticalScale(20),
-    padding: moderateScale(10),
-    paddingHorizontal: moderateScale(14),
-    borderRadius: moderateScale(12),
-    backgroundColor: TEXT_COLOR,
-    borderColor: "#34495e",
-    borderWidth: 1,
-  },
-  actionText: {
-    fontSize: moderateScale(14),
-    color: BG_COLOR,
-    fontFamily: "Poppins_400Regular",
-  },
-});

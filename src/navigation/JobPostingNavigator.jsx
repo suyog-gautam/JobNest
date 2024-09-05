@@ -10,7 +10,8 @@ import SelectUser from "../screens/onboarding/SelectUser";
 import { useNavigation } from "@react-navigation/native";
 import Main from "../screens/job-searching/Main";
 import MainNavigator from "./MainNavigator";
-import { BG_COLOR, TEXT_COLOR } from "../utils/colors";
+import { getColors } from "../utils/colors";
+import { useTheme } from "../utils/ThemeContext";
 import LoginForCompany from "../screens/job-posting/LoginForCompany";
 import JobDetail from "../screens/job-posting/tabs/JobDetail";
 import JobSearchingNavigator from "./JobSearchingNavigator";
@@ -18,6 +19,8 @@ import SignUpForCompany from "../screens/job-posting/SignUpForCompany";
 const Stack = createStackNavigator();
 
 const JobPostingNavigator = () => {
+  const { theme } = useTheme(); // Access theme
+  const { BG_COLOR, TEXT_COLOR } = getColors(theme);
   const navigation = useNavigation();
   const { user } = UseAuth();
 

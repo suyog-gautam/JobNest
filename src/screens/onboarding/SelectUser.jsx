@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React from "react";
-import { BG_COLOR, TEXT_COLOR } from "../../utils/colors";
+import { getColors } from "../../utils/colors";
+import { useTheme } from "../../utils/ThemeContext";
 import { moderateScale, verticalScale } from "react-native-size-matters";
 import { useNavigation } from "@react-navigation/native";
 import CustomText from "../../utils/CustomText";
@@ -16,7 +17,60 @@ import { useEffect } from "react";
 const screenWidth = Dimensions.get("window").width;
 
 const SelectUser = () => {
+  const { theme } = useTheme(); // Access theme
+  const { BG_COLOR, TEXT_COLOR } = getColors(theme);
   const { user } = UseAuth();
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      paddingHorizontal: "5%",
+      backgroundColor: BG_COLOR,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    logo: {
+      width: moderateScale(85),
+      height: moderateScale(85),
+      marginBottom: moderateScale(30),
+      borderRadius: moderateScale(7),
+    },
+    title: {
+      fontSize: moderateScale(20),
+      fontWeight: "600",
+      color: TEXT_COLOR,
+    },
+    wantToHire: {
+      width: screenWidth * 0.9,
+      height: verticalScale(45),
+      backgroundColor: TEXT_COLOR,
+      borderRadius: moderateScale(10),
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: verticalScale(20),
+    },
+    wantToSearch: {
+      width: screenWidth * 0.9,
+      height: verticalScale(50),
+      borderColor: TEXT_COLOR,
+      borderWidth: 2,
+      backgroundColor: BG_COLOR,
+      borderRadius: moderateScale(10),
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: verticalScale(20),
+    },
+    buttonFind: {
+      color: TEXT_COLOR,
+      fontSize: moderateScale(16),
+      fontWeight: "500",
+    },
+    buttonHire: {
+      color: BG_COLOR,
+      fontSize: moderateScale(16),
+      fontWeight: "500",
+    },
+  });
+
   useEffect(() => {}, [user]);
   const navigation = useNavigation();
   return (
@@ -41,56 +95,5 @@ const SelectUser = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: "5%",
-    backgroundColor: BG_COLOR,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  logo: {
-    width: moderateScale(85),
-    height: moderateScale(85),
-    marginBottom: moderateScale(30),
-    borderRadius: moderateScale(7),
-  },
-  title: {
-    fontSize: moderateScale(20),
-    fontWeight: "600",
-    color: TEXT_COLOR,
-  },
-  wantToHire: {
-    width: screenWidth * 0.9,
-    height: verticalScale(45),
-    backgroundColor: TEXT_COLOR,
-    borderRadius: moderateScale(10),
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: verticalScale(20),
-  },
-  wantToSearch: {
-    width: screenWidth * 0.9,
-    height: verticalScale(50),
-    borderColor: TEXT_COLOR,
-    borderWidth: 2,
-    backgroundColor: BG_COLOR,
-    borderRadius: moderateScale(10),
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: verticalScale(20),
-  },
-  buttonFind: {
-    color: TEXT_COLOR,
-    fontSize: moderateScale(16),
-    fontWeight: "500",
-  },
-  buttonHire: {
-    color: BG_COLOR,
-    fontSize: moderateScale(16),
-    fontWeight: "500",
-  },
-});
 
 export default SelectUser;

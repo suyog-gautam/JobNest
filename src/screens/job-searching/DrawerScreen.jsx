@@ -1,13 +1,48 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import React, { useState } from "react";
-import { BG_COLOR, TEXT_COLOR } from "../../utils/colors";
+import { getColors } from "../../utils/colors";
+import { useTheme } from "../../utils/ThemeContext";
 import { verticalScale, scale } from "react-native-size-matters";
 import Home from "./tabs/Home";
 import Apply from "./tabs/Apply";
 import Inbox from "./tabs/Inbox";
 import Profile from "./tabs/Profile";
 const DrawerScreen = () => {
+  const { theme } = useTheme(); // Access theme
+  const { BG_COLOR, TEXT_COLOR } = getColors(theme);
   const [selectedTab, setSelectedTab] = useState("home");
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: BG_COLOR,
+    },
+    bottomNavView: {
+      backgroundColor: BG_COLOR,
+      width: "100%",
+      height: verticalScale(50),
+      position: "absolute",
+      bottom: 0,
+      shadowColor: "rgba(0, 0, 0, 0.5)",
+      shadowOpacity: 0.8,
+
+      flexDirection: "row",
+      justifyContent: "space-evenly",
+      alignItems: "center",
+      borderTopColor: "grey",
+      borderTopWidth: 0.5,
+    },
+    bottomTab: {
+      height: "100%",
+      width: "20%",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    tabIcon: {
+      width: scale(25),
+      height: scale(25),
+      tintColor: TEXT_COLOR,
+    },
+  });
   const handleTabPress = (tab) => {
     setSelectedTab(tab);
   };
@@ -83,35 +118,3 @@ const DrawerScreen = () => {
 };
 
 export default DrawerScreen;
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: BG_COLOR,
-  },
-  bottomNavView: {
-    backgroundColor: BG_COLOR,
-    width: "100%",
-    height: verticalScale(50),
-    position: "absolute",
-    bottom: 0,
-    shadowColor: "rgba(0, 0, 0, 0.5)",
-    shadowOpacity: 0.8,
-
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    alignItems: "center",
-    borderTopColor: "grey",
-    borderTopWidth: 0.5,
-  },
-  bottomTab: {
-    height: "100%",
-    width: "20%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  tabIcon: {
-    width: scale(25),
-    height: scale(25),
-    tintColor: TEXT_COLOR,
-  },
-});

@@ -17,7 +17,8 @@ import CustomTextInput from "../../../components/CustomTextInput";
 import CustomDropdown from "../../../components/CustomDropdown";
 import CustomSolidBtn from "../../../components/CustomSolidBtn";
 import CustomText from "../../../utils/CustomText";
-import { BG_COLOR, TEXT_COLOR } from "../../../utils/colors";
+import { getColors } from "../../../utils/colors";
+import { useTheme } from "../../../utils/ThemeContext";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -28,6 +29,8 @@ import { doc, updateDoc, getDoc } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const EditJobs = () => {
+  const { theme } = useTheme(); // Access theme
+  const { BG_COLOR, TEXT_COLOR } = getColors(theme);
   const navigation = useNavigation();
   const route = useRoute();
   const { job } = route.params; // Get the job data from the route parameters
@@ -35,7 +38,33 @@ const EditJobs = () => {
   const [loading, setLoading] = useState(false);
   const [parsedUser, setParsedUser] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(job.department);
-
+  const styles = StyleSheet.create({
+    container: { flex: 1, backgroundColor: BG_COLOR },
+    backArrow: {
+      width: 25,
+      height: 25,
+      tintColor: TEXT_COLOR,
+    },
+    header: {
+      width: "100%",
+      height: verticalScale(45),
+      flexDirection: "row",
+      alignItems: "center",
+      marginTop: moderateScale(25),
+      paddingLeft: moderateScale(20),
+    },
+    title: {
+      color: TEXT_COLOR,
+      fontSize: moderateScale(23),
+      fontWeight: "600",
+      marginLeft: scale(15),
+      fontFamily: "Poppins_500Medium",
+    },
+    errorMsg: {
+      color: "red",
+      marginLeft: moderateScale(25),
+    },
+  });
   useEffect(() => {
     // Retrieve user data from AsyncStorage
     const fetchUserData = async () => {
@@ -273,31 +302,3 @@ const EditJobs = () => {
 };
 
 export default EditJobs;
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: BG_COLOR },
-  backArrow: {
-    width: 25,
-    height: 25,
-    tintColor: TEXT_COLOR,
-  },
-  header: {
-    width: "100%",
-    height: verticalScale(45),
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: moderateScale(25),
-    paddingLeft: moderateScale(20),
-  },
-  title: {
-    color: TEXT_COLOR,
-    fontSize: moderateScale(23),
-    fontWeight: "600",
-    marginLeft: scale(15),
-    fontFamily: "Poppins_500Medium",
-  },
-  errorMsg: {
-    color: "red",
-    marginLeft: moderateScale(25),
-  },
-});

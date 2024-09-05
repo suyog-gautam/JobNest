@@ -12,7 +12,8 @@ import {
   scale,
   verticalScale,
 } from "react-native-size-matters";
-import { BG_COLOR, TEXT_COLOR } from "../utils/colors";
+import { getColors } from "../utils/colors";
+import { useTheme } from "../utils/ThemeContext";
 import CustomText from "../utils/CustomText";
 
 const CustomTextInput = ({
@@ -24,6 +25,50 @@ const CustomTextInput = ({
   onChangeText,
   multiline,
 }) => {
+  const { theme } = useTheme(); // Access theme
+  const { BG_COLOR, TEXT_COLOR } = getColors(theme);
+  const styles = StyleSheet.create({
+    inputContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      width: "90%",
+      height: verticalScale(40),
+      borderWidth: 0.5,
+      alignSelf: "center",
+      marginTop: moderateVerticalScale(9),
+      marginBottom: moderateVerticalScale(9),
+      borderRadius: scale(10),
+      paddingLeft: moderateScale(12),
+      paddingRight: moderateScale(12),
+
+      borderColor: TEXT_COLOR,
+    },
+    inputTitle: {
+      color: TEXT_COLOR,
+      position: "absolute",
+      top: -moderateVerticalScale(9),
+      left: moderateScale(13),
+      backgroundColor: BG_COLOR,
+      paddingHorizontal: moderateScale(5),
+      fontSize: moderateScale(13),
+    },
+    inputText: {
+      flex: 1,
+      textAlign: "left",
+      marginRight: moderateScale(15),
+      marginLeft: moderateScale(5),
+      fontSize: moderateScale(13),
+      fontFamily: "Poppins_400Regular",
+      color: TEXT_COLOR,
+    },
+    showButton: {
+      paddingLeft: moderateScale(10),
+    },
+    showButtonText: {
+      fontSize: moderateScale(12),
+      color: "#007AFF",
+    },
+  });
   const [secureTextEntry, setSecureTextEntry] = useState(
     type === "password" ? true : false
   );
@@ -57,48 +102,5 @@ const CustomTextInput = ({
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    width: "90%",
-    height: verticalScale(40),
-    borderWidth: 0.5,
-    alignSelf: "center",
-    marginTop: moderateVerticalScale(9),
-    marginBottom: moderateVerticalScale(9),
-    borderRadius: scale(10),
-    paddingLeft: moderateScale(12),
-    paddingRight: moderateScale(12),
-
-    borderColor: TEXT_COLOR,
-  },
-  inputTitle: {
-    color: TEXT_COLOR,
-    position: "absolute",
-    top: -moderateVerticalScale(9),
-    left: moderateScale(13),
-    backgroundColor: BG_COLOR,
-    paddingHorizontal: moderateScale(5),
-    fontSize: moderateScale(13),
-  },
-  inputText: {
-    flex: 1,
-    textAlign: "left",
-    marginRight: moderateScale(15),
-    marginLeft: moderateScale(5),
-    fontSize: moderateScale(13),
-    fontFamily: "Poppins_400Regular",
-    color: TEXT_COLOR,
-  },
-  showButton: {
-    paddingLeft: moderateScale(10),
-  },
-  showButtonText: {
-    fontSize: moderateScale(12),
-    color: "#007AFF",
-  },
-});
 
 export default CustomTextInput;

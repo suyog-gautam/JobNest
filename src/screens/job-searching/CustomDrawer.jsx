@@ -5,17 +5,146 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
+  Alert,
 } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { BG_COLOR, TEXT_COLOR } from "../../utils/colors";
+import { getColors } from "../../utils/colors";
+import { useTheme } from "../../utils/ThemeContext";
 import CustomText from "../../utils/CustomText";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { moderateScale, scale } from "react-native-size-matters";
 import { useNavigation } from "@react-navigation/native";
 import { UseAuth } from "../../utils/AuthContext";
 const CustomDrawer = () => {
+  const { theme, setTheme } = useTheme(); // Access theme
+  const { BG_COLOR, TEXT_COLOR } = getColors(theme);
   const navigation = useNavigation();
   const { user } = UseAuth();
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: BG_COLOR,
+      borderRightWidth: 0.2,
+      borderRightColor: "white",
+    },
+    topView: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginTop: scale(20),
+    },
+    profileImage: {
+      width: scale(50),
+      height: scale(50),
+      borderRadius: scale(25),
+    },
+    headerText: {
+      fontSize: scale(14),
+      fontFamily: "Poppins_700Bold",
+      color: TEXT_COLOR,
+      marginLeft: scale(10),
+    },
+    subHeaderText: {
+      fontSize: scale(10),
+      color: TEXT_COLOR,
+      marginLeft: scale(10),
+      marginTop: scale(0),
+      width: "70%",
+    },
+    buttonView: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-evenly",
+      marginTop: scale(20),
+    },
+    loginBtn: {
+      backgroundColor: TEXT_COLOR,
+      padding: scale(7),
+      borderRadius: scale(5),
+      borderColor: TEXT_COLOR,
+      borderWidth: 1,
+      borderRadius: scale(30),
+      alignItems: "center",
+      justifyContent: "center",
+      width: "45%",
+    },
+    loginTxt: {
+      color: BG_COLOR,
+      fontSize: scale(12),
+    },
+    signupBtn: {
+      backgroundColor: BG_COLOR,
+      padding: scale(7),
+      borderColor: TEXT_COLOR,
+      alignItems: "center",
+      justifyContent: "center",
+      borderWidth: 1,
+      borderRadius: scale(30),
+      width: "45%",
+    },
+    signupTxt: {
+      color: TEXT_COLOR,
+      fontSize: scale(12),
+    },
+    seperator: {
+      width: "100%",
+      height: moderateScale(1),
+      backgroundColor: TEXT_COLOR,
+      marginTop: scale(20),
+      opacity: 0.2,
+    },
+    menuItem: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: scale(10),
+      height: scale(40),
+    },
+    icon: {
+      width: scale(20),
+      height: scale(20),
+      tintColor: TEXT_COLOR,
+    },
+    itemText: {
+      fontFamily: "Poppins_700Bold",
+      fontSize: scale(13),
+      color: TEXT_COLOR,
+      marginLeft: scale(15),
+    },
+  });
+  const handleAppTheme = () => {
+    setTheme(theme === "light" ? "dark" : "light");
+  };
+  const handleLogout = async () => {
+    Alert.alert(
+      "Confirm Logout",
+      "Are you sure you want to log out?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Logout cancelled"),
+          style: "cancel",
+        },
+        {
+          text: "Logout",
+          onPress: async () => {
+            try {
+              await AsyncStorage.removeItem("user");
+              alert("Logged out successfully");
+              navigation.reset({
+                index: 0,
+                routes: [{ name: "SelectUser" }],
+              });
+            } catch (error) {
+              console.error("Error logging out: ", error);
+            }
+          },
+          style: "destructive",
+        },
+      ],
+      { cancelable: true }
+    );
+  };
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.topView}>
@@ -56,9 +185,17 @@ const CustomDrawer = () => {
               }
             : null,
           { title: "Rate Us", icon: require("../../images/rateus.png") },
-          { title: "Theme", icon: require("../../images/theme.png") },
+          {
+            title: "Theme",
+            icon: require("../../images/theme.png"),
+            onPress: handleAppTheme,
+          },
           user
-            ? { title: "Logout", icon: require("../../images/logout.png") }
+            ? {
+                title: "Logout",
+                icon: require("../../images/logout.png"),
+                onPress: handleLogout,
+              }
             : null,
         ].filter(Boolean)}
         renderItem={({ item, index }) => {
@@ -84,94 +221,3 @@ const CustomDrawer = () => {
 };
 
 export default CustomDrawer;
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: BG_COLOR,
-    borderRightWidth: 0.2,
-    borderRightColor: "white",
-  },
-  topView: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: scale(20),
-  },
-  profileImage: {
-    width: scale(50),
-    height: scale(50),
-    borderRadius: scale(25),
-  },
-  headerText: {
-    fontSize: scale(14),
-    fontFamily: "Poppins_700Bold",
-    color: TEXT_COLOR,
-    marginLeft: scale(10),
-  },
-  subHeaderText: {
-    fontSize: scale(10),
-    color: TEXT_COLOR,
-    marginLeft: scale(10),
-    marginTop: scale(0),
-    width: "70%",
-  },
-  buttonView: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-evenly",
-    marginTop: scale(20),
-  },
-  loginBtn: {
-    backgroundColor: TEXT_COLOR,
-    padding: scale(7),
-    borderRadius: scale(5),
-    borderColor: TEXT_COLOR,
-    borderWidth: 1,
-    borderRadius: scale(30),
-    alignItems: "center",
-    justifyContent: "center",
-    width: "45%",
-  },
-  loginTxt: {
-    color: BG_COLOR,
-    fontSize: scale(12),
-  },
-  signupBtn: {
-    backgroundColor: BG_COLOR,
-    padding: scale(7),
-    borderColor: TEXT_COLOR,
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderRadius: scale(30),
-    width: "45%",
-  },
-  signupTxt: {
-    color: TEXT_COLOR,
-    fontSize: scale(12),
-  },
-  seperator: {
-    width: "100%",
-    height: moderateScale(1),
-    backgroundColor: TEXT_COLOR,
-    marginTop: scale(20),
-    opacity: 0.2,
-  },
-  menuItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: scale(10),
-    height: scale(40),
-  },
-  icon: {
-    width: scale(20),
-    height: scale(20),
-    tintColor: TEXT_COLOR,
-  },
-  itemText: {
-    fontFamily: "Poppins_700Bold",
-    fontSize: scale(13),
-    color: TEXT_COLOR,
-    marginLeft: scale(15),
-  },
-});

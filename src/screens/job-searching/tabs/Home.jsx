@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import React from "react";
-import { BG_COLOR, TEXT_COLOR } from "../../../utils/colors";
+import { getColors } from "../../../utils/colors";
+import { useTheme } from "../../../utils/ThemeContext";
 import CustomText from "../../../utils/CustomText";
 import { moderateScale, scale } from "react-native-size-matters";
 import { TextInput } from "react-native-gesture-handler";
@@ -9,8 +10,138 @@ import { useNavigation } from "@react-navigation/native";
 import { UseAuth } from "../../../utils/AuthContext";
 import SearchJobs from "./SearchJobs";
 const Home = () => {
+  const { theme } = useTheme(); // Access theme
+  const { BG_COLOR, TEXT_COLOR } = getColors(theme);
   const { user } = UseAuth();
   const navigation = useNavigation();
+  const styles = StyleSheet.create({
+    container: {
+      backgroundColor: BG_COLOR,
+    },
+    searchBox: {
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: BG_COLOR,
+      borderRadius: scale(40),
+      marginHorizontal: scale(20),
+      borderColor: TEXT_COLOR,
+      borderWidth: 1,
+      marginTop: moderateScale(15),
+      paddingLeft: scale(15),
+      height: moderateScale(50),
+    },
+    icon: {
+      width: 20,
+      height: 20,
+      tintColor: "grey",
+    },
+    searchText: {
+      fontSize: 16,
+      fontFamily: "Poppins_400Regular",
+      color: "grey",
+      marginLeft: 10,
+    },
+    headerText: {
+      fontSize: moderateScale(22),
+      fontFamily: "Poppins_700Bold",
+      width: "90%",
+      paddingLeft: moderateScale(30),
+      color: TEXT_COLOR,
+      marginTop: moderateScale(20),
+    },
+    notes: {
+      flexDirection: "row",
+      alignItems: "center",
+
+      marginTop: moderateScale(7),
+      paddingLeft: moderateScale(30),
+    },
+    noteText: {
+      fontSize: moderateScale(14),
+
+      fontFamily: "Poppins_400Regular",
+      color: TEXT_COLOR,
+      marginLeft: 10,
+    },
+    buttonView: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-evenly",
+      marginTop: scale(20),
+    },
+    loginBtn: {
+      backgroundColor: TEXT_COLOR,
+      padding: scale(7),
+      borderRadius: scale(5),
+      borderColor: TEXT_COLOR,
+      borderWidth: 1,
+      borderRadius: scale(30),
+      alignItems: "center",
+      justifyContent: "center",
+      width: "45%",
+    },
+    loginTxt: {
+      color: BG_COLOR,
+      fontSize: scale(12),
+    },
+    signupBtn: {
+      backgroundColor: BG_COLOR,
+      padding: scale(7),
+      borderColor: TEXT_COLOR,
+      alignItems: "center",
+      justifyContent: "center",
+      borderWidth: 1,
+      borderRadius: scale(30),
+      width: "45%",
+    },
+    signupTxt: {
+      color: TEXT_COLOR,
+      fontSize: scale(12),
+    },
+    jobsearchCard: {
+      backgroundColor: BG_COLOR,
+      padding: moderateScale(20),
+      marginTop: moderateScale(20),
+      alignItems: "center",
+      borderColor: TEXT_COLOR,
+      borderWidth: 1,
+      marginHorizontal: moderateScale(10),
+      borderRadius: scale(20),
+    },
+    gif: {
+      width: scale(100),
+      height: scale(100),
+      alignSelf: "center",
+    },
+    input: {
+      width: "100%",
+      height: scale(40),
+      borderColor: TEXT_COLOR,
+      borderWidth: 1,
+      fontFamily: "Poppins_400Regular",
+      borderRadius: scale(20),
+      marginTop: scale(10),
+      paddingLeft: scale(20),
+
+      color: TEXT_COLOR,
+    },
+    searchBtn: {
+      backgroundColor: TEXT_COLOR,
+      paddingHorizontal: scale(30),
+      paddingVertical: scale(10),
+      width: "70%",
+      textAlign: "center",
+      borderRadius: scale(40),
+      marginTop: scale(20),
+    },
+    searchBtnText: {
+      color: BG_COLOR,
+      fontSize: scale(17),
+      textAlign: "center",
+      fontFamily: "Poppins_400Regular",
+    },
+  });
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -100,130 +231,3 @@ const Home = () => {
 };
 
 export default Home;
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: BG_COLOR,
-  },
-  searchBox: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: BG_COLOR,
-    borderRadius: scale(40),
-    marginHorizontal: scale(20),
-    borderColor: TEXT_COLOR,
-    borderWidth: 1,
-    marginTop: moderateScale(15),
-    paddingLeft: scale(15),
-    height: moderateScale(50),
-  },
-  icon: {
-    width: 20,
-    height: 20,
-    tintColor: "grey",
-  },
-  searchText: {
-    fontSize: 16,
-    fontFamily: "Poppins_400Regular",
-    color: "grey",
-    marginLeft: 10,
-  },
-  headerText: {
-    fontSize: moderateScale(22),
-    fontFamily: "Poppins_700Bold",
-    width: "90%",
-    paddingLeft: moderateScale(30),
-    color: TEXT_COLOR,
-    marginTop: moderateScale(20),
-  },
-  notes: {
-    flexDirection: "row",
-    alignItems: "center",
-
-    marginTop: moderateScale(7),
-    paddingLeft: moderateScale(30),
-  },
-  noteText: {
-    fontSize: moderateScale(14),
-
-    fontFamily: "Poppins_400Regular",
-    color: TEXT_COLOR,
-    marginLeft: 10,
-  },
-  buttonView: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-evenly",
-    marginTop: scale(20),
-  },
-  loginBtn: {
-    backgroundColor: TEXT_COLOR,
-    padding: scale(7),
-    borderRadius: scale(5),
-    borderColor: TEXT_COLOR,
-    borderWidth: 1,
-    borderRadius: scale(30),
-    alignItems: "center",
-    justifyContent: "center",
-    width: "45%",
-  },
-  loginTxt: {
-    color: BG_COLOR,
-    fontSize: scale(12),
-  },
-  signupBtn: {
-    backgroundColor: BG_COLOR,
-    padding: scale(7),
-    borderColor: TEXT_COLOR,
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderRadius: scale(30),
-    width: "45%",
-  },
-  signupTxt: {
-    color: TEXT_COLOR,
-    fontSize: scale(12),
-  },
-  jobsearchCard: {
-    backgroundColor: BG_COLOR,
-    padding: moderateScale(20),
-    marginTop: moderateScale(20),
-    alignItems: "center",
-    borderColor: TEXT_COLOR,
-    borderWidth: 1,
-    marginHorizontal: moderateScale(10),
-    borderRadius: scale(20),
-  },
-  gif: {
-    width: scale(100),
-    height: scale(100),
-    alignSelf: "center",
-  },
-  input: {
-    width: "100%",
-    height: scale(40),
-    borderColor: TEXT_COLOR,
-    borderWidth: 1,
-    fontFamily: "Poppins_400Regular",
-    borderRadius: scale(20),
-    marginTop: scale(10),
-    paddingLeft: scale(20),
-
-    color: TEXT_COLOR,
-  },
-  searchBtn: {
-    backgroundColor: TEXT_COLOR,
-    paddingHorizontal: scale(30),
-    paddingVertical: scale(10),
-    width: "70%",
-    textAlign: "center",
-    borderRadius: scale(40),
-    marginTop: scale(20),
-  },
-  searchBtnText: {
-    color: BG_COLOR,
-    fontSize: scale(17),
-    textAlign: "center",
-    fontFamily: "Poppins_400Regular",
-  },
-});

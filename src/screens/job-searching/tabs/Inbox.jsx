@@ -2,7 +2,7 @@ import { View, Text } from "react-native";
 import React from "react";
 import NoLogin from "../../../components/NoLogin";
 import { UseAuth } from "../../../utils/AuthContext";
-const Inbox = () => {
+const Submissions = () => {
   const { user } = UseAuth();
   return (
     <View>
@@ -18,4 +18,4 @@ const Inbox = () => {
   );
 };
 
-export default Inbox;
+export default Submissions;

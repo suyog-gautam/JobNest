@@ -13,7 +13,8 @@ import {
   moderateVerticalScale,
   moderateScale,
 } from "react-native-size-matters";
-import { TEXT_COLOR, BG_COLOR } from "../../../utils/colors";
+import { getColors } from "../../../utils/colors";
+import { useTheme } from "../../../utils/ThemeContext";
 import { collection, onSnapshot, doc, getDoc } from "firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
 import { firestore } from "../../../../firebaseConfig"; // Adjust the import according to your setup
@@ -23,13 +24,128 @@ import CustomText from "../../../utils/CustomText";
 import { UseAuth } from "../../../utils/AuthContext";
 
 const SearchJobs = () => {
+  const { theme } = useTheme(); // Access theme
+  const { BG_COLOR, TEXT_COLOR } = getColors(theme);
   const { user } = UseAuth();
   const [searchText, setSearchText] = useState("");
   const [allJobs, setAllJobs] = useState([]);
   const [filteredJobs, setFilteredJobs] = useState([]);
   const [savedJobIds, setSavedJobIds] = useState([]); // Holds an array of saved job IDs
   const navigation = useNavigation();
-
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: BG_COLOR,
+    },
+    searchBox: {
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: BG_COLOR,
+      borderRadius: scale(40),
+      alignSelf: "center",
+      width: "90%",
+      borderColor: TEXT_COLOR,
+      borderWidth: 1,
+      marginTop: moderateScale(15),
+      paddingLeft: scale(15),
+      height: moderateScale(50),
+    },
+    searchicon: {
+      width: scale(15),
+      height: scale(15),
+      tintColor: TEXT_COLOR,
+    },
+    searchText: {
+      width: "80%",
+      fontSize: moderateScale(16),
+      fontFamily: "Poppins_400Regular",
+      color: TEXT_COLOR,
+      marginLeft: scale(10),
+    },
+    jobItem: {
+      padding: moderateScale(16),
+      backgroundColor: BG_COLOR,
+      margin: moderateScale(8),
+      borderRadius: moderateScale(8),
+      borderWidth: 1,
+      borderColor: "#ddd",
+    },
+    header: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+    },
+    bookmark: {
+      height: scale(18),
+      width: scale(18),
+      tintColor: TEXT_COLOR,
+    },
+    jobTitle: {
+      color: TEXT_COLOR,
+      fontSize: moderateScale(16),
+      fontFamily: "Poppins_700Bold",
+    },
+    companyName: {
+      fontSize: moderateScale(14),
+      color: TEXT_COLOR,
+    },
+    details: {
+      marginTop: moderateScale(4),
+    },
+    detailsRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginBottom: moderateScale(8),
+    },
+    icon: {
+      marginRight: scale(4),
+      tintColor: "#8a7c72",
+    },
+    detailText: {
+      fontFamily: "Poppins_400Regular",
+      fontSize: moderateScale(12),
+      color: "#8a7c72",
+      marginRight: scale(16),
+    },
+    description: {
+      fontFamily: "Poppins_400Regular",
+      fontSize: moderateScale(12),
+      color: "#8a7c72",
+      marginBottom: moderateScale(8),
+    },
+    skillsContainer: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      marginBottom: moderateScale(8),
+    },
+    skill: {
+      fontFamily: "Poppins_400Regular",
+      fontSize: moderateScale(12),
+      color: "#2196F3",
+      marginRight: scale(8),
+    },
+    footer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginTop: moderateScale(2),
+    },
+    timePosted: {
+      fontFamily: "Poppins_400Regular",
+      fontSize: moderateScale(12),
+      color: "#8a7c72",
+    },
+    saveText: {
+      fontSize: moderateScale(12),
+      color: "#2196F3",
+    },
+    noResults: {
+      fontFamily: "Poppins_400Regular",
+      textAlign: "center",
+      marginTop: moderateScale(20),
+      fontSize: moderateScale(16),
+      color: TEXT_COLOR,
+    },
+  });
   useEffect(() => {
     const fetchAllJobs = async () => {
       const jobsCollectionRef = collection(firestore, "jobs");
@@ -200,117 +316,3 @@ const SearchJobs = () => {
 };
 
 export default SearchJobs;
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: BG_COLOR,
-  },
-  searchBox: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: BG_COLOR,
-    borderRadius: scale(40),
-    alignSelf: "center",
-    width: "90%",
-    borderColor: TEXT_COLOR,
-    borderWidth: 1,
-    marginTop: moderateScale(15),
-    paddingLeft: scale(15),
-    height: moderateScale(50),
-  },
-  searchicon: {
-    width: scale(15),
-    height: scale(15),
-    tintColor: TEXT_COLOR,
-  },
-  searchText: {
-    width: "80%",
-    fontSize: moderateScale(16),
-    fontFamily: "Poppins_400Regular",
-    color: TEXT_COLOR,
-    marginLeft: scale(10),
-  },
-  jobItem: {
-    padding: moderateScale(16),
-    backgroundColor: BG_COLOR,
-    margin: moderateScale(8),
-    borderRadius: moderateScale(8),
-    borderWidth: 1,
-    borderColor: "#ddd",
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  bookmark: {
-    height: scale(18),
-    width: scale(18),
-    tintColor: TEXT_COLOR,
-  },
-  jobTitle: {
-    color: TEXT_COLOR,
-    fontSize: moderateScale(16),
-    fontFamily: "Poppins_700Bold",
-  },
-  companyName: {
-    fontSize: moderateScale(14),
-    color: TEXT_COLOR,
-  },
-  details: {
-    marginTop: moderateScale(4),
-  },
-  detailsRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: moderateScale(8),
-  },
-  icon: {
-    marginRight: scale(4),
-    tintColor: "#8a7c72",
-  },
-  detailText: {
-    fontFamily: "Poppins_400Regular",
-    fontSize: moderateScale(12),
-    color: "#8a7c72",
-    marginRight: scale(16),
-  },
-  description: {
-    fontFamily: "Poppins_400Regular",
-    fontSize: moderateScale(12),
-    color: "#8a7c72",
-    marginBottom: moderateScale(8),
-  },
-  skillsContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    marginBottom: moderateScale(8),
-  },
-  skill: {
-    fontFamily: "Poppins_400Regular",
-    fontSize: moderateScale(12),
-    color: "#2196F3",
-    marginRight: scale(8),
-  },
-  footer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: moderateScale(2),
-  },
-  timePosted: {
-    fontFamily: "Poppins_400Regular",
-    fontSize: moderateScale(12),
-    color: "#8a7c72",
-  },
-  saveText: {
-    fontSize: moderateScale(12),
-    color: "#2196F3",
-  },
-  noResults: {
-    fontFamily: "Poppins_400Regular",
-    textAlign: "center",
-    marginTop: moderateScale(20),
-    fontSize: moderateScale(16),
-    color: TEXT_COLOR,
-  },
-});

@@ -11,13 +11,16 @@ import SearchJobs from "../screens/job-searching/tabs/SearchJobs";
 import { UseAuth } from "../utils/AuthContext";
 
 import { useNavigation } from "@react-navigation/native";
-import { BG_COLOR, TEXT_COLOR } from "../utils/colors";
+import { getColors } from "../utils/colors";
+import { useTheme } from "../utils/ThemeContext";
 import Main from "../screens/job-searching/Main";
 import DashboardForCompany from "../screens/job-posting/DashboardForCompany";
 import JobDetail from "../screens/job-posting/tabs/JobDetail";
 const Stack = createStackNavigator();
 
 const MainNavigator = () => {
+  const { theme } = useTheme(); // Access theme
+  const { BG_COLOR, TEXT_COLOR } = getColors(theme);
   const navigation = useNavigation();
   const { user } = UseAuth();
   useEffect(() => {
