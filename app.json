@@ -22,7 +22,10 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.suyog.jobnest",
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/icon.png"
@@ -45,6 +48,11 @@
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "b3480a6f-362e-4fbf-ba16-4a7ceb0a3445"
+      }
+    }
   }
 }

@@ -48,13 +48,9 @@ const DrawerScreen = () => {
   };
   return (
     <View style={styles.container}>
-      <View style={{ display: selectedTab === "home" ? "flex" : "none" }}>
-        <Home />
-      </View>
+      {selectedTab === "home" && <Home />}
       {selectedTab === "send" && <Apply />}
-      <View style={{ display: selectedTab === "chat" ? "flex" : "none" }}>
-        <Inbox />
-      </View>
+      {selectedTab === "chat" && <Inbox />}
       <View style={{ display: selectedTab === "profile" ? "flex" : "none" }}>
         <Profile />
       </View>
@@ -93,8 +89,8 @@ const DrawerScreen = () => {
           <Image
             source={
               selectedTab == "chat"
-                ? require("../../images/chat.png")
-                : require("../../images/chat1.png")
+                ? require("../../images/bookmarkfiiled.png")
+                : require("../../images/bookmark.png")
             }
             style={[styles.tabIcon]}
           />

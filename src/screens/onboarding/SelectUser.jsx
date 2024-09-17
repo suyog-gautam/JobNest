@@ -72,11 +72,12 @@ const SelectUser = () => {
   });
 
   useEffect(() => {}, [user]);
+
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <Image source={require("../../images/logo.png")} style={styles.logo} />
-
+      {console.log(user?.role)}
       <CustomText style={styles.title}>What you are looking for?</CustomText>
       <TouchableOpacity
         style={styles.wantToHire}

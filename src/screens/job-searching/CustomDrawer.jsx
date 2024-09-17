@@ -7,7 +7,7 @@ import {
   FlatList,
   Alert,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getColors } from "../../utils/colors";
 import { useTheme } from "../../utils/ThemeContext";
@@ -16,10 +16,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { moderateScale, scale } from "react-native-size-matters";
 import { useNavigation } from "@react-navigation/native";
 import { UseAuth } from "../../utils/AuthContext";
+import { doc, getDoc } from "firebase/firestore";
+import { firestore } from "../../../firebaseConfig";
 const CustomDrawer = () => {
   const { theme, setTheme } = useTheme(); // Access theme
   const { BG_COLOR, TEXT_COLOR } = getColors(theme);
   const navigation = useNavigation();
+  const [userData, setUserData] = useState(null);
   const { user } = UseAuth();
   const styles = StyleSheet.create({
     container: {
@@ -112,6 +115,26 @@ const CustomDrawer = () => {
       marginLeft: scale(15),
     },
   });
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (user?.user?.uid) {
+        try {
+          const userDocRef = doc(firestore, "users", user.user.uid);
+          const userDoc = await getDoc(userDocRef);
+
+          if (userDoc.exists()) {
+            setUserData(userDoc.data());
+          } else {
+            console.log("No such document!");
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+    };
+
+    fetchUserData();
+  }, [user]);
   const handleAppTheme = () => {
     setTheme(theme === "light" ? "dark" : "light");
   };
@@ -145,11 +168,16 @@ const CustomDrawer = () => {
       { cancelable: true }
     );
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.topView}>
         <Image
-          source={require("../../images/profile.png")}
+          source={
+            userData?.profilePictureUrl
+              ? { uri: userData.profilePictureUrl }
+              : require("../../images/profile.png")
+          }
           style={styles.profileImage}
         />
         <View>
@@ -184,7 +212,7 @@ const CustomDrawer = () => {
                 onPress: () => navigation.navigate("SavedJobs"),
               }
             : null,
-          { title: "Rate Us", icon: require("../../images/rateus.png") },
+
           {
             title: "Theme",
             icon: require("../../images/theme.png"),

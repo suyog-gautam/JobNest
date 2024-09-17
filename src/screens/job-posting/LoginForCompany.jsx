@@ -8,7 +8,8 @@ import {
   moderateScale,
   moderateVerticalScale,
 } from "react-native-size-matters";
-import { BG_COLOR } from "../../utils/colors";
+import { getColors } from "../../utils/colors";
+import { useTheme } from "../../utils/ThemeContext";
 import CustomTextInput from "../../components/CustomTextInput";
 import CustomSolidBtn from "../../components/CustomSolidBtn";
 import CustomText from "../../utils/CustomText";
@@ -20,9 +21,46 @@ import AsyncStorage from "@react-native-async-storage/async-storage"; // Added i
 import Loader from "../../utils/Loader"; // Added import for Loader
 import firestore from "@react-native-firebase/firestore";
 const LoginForCompany = () => {
+  const { theme } = useTheme(); // Access theme
+  const { BG_COLOR, TEXT_COLOR } = getColors(theme);
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const route = useRoute();
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: BG_COLOR,
+    },
+    logo: {
+      width: scale(70),
+      height: scale(70),
+      alignSelf: "center",
+      marginTop: moderateVerticalScale(70),
+      borderRadius: moderateScale(7),
+    },
+    title: {
+      alignSelf: "center",
+      fontSize: moderateScale(25),
+      color: TEXT_COLOR,
+      marginTop: moderateVerticalScale(50),
+      fontWeight: "600",
+    },
+    forgotPasswordContainer: {
+      alignSelf: "flex-end",
+      marginRight: moderateScale(20),
+      marginTop: moderateScale(13),
+    },
+    forgotPasswordText: {
+      fontWeight: "500",
+      fontSize: moderateScale(14),
+      textDecorationLine: "underline",
+      color: TEXT_COLOR,
+    },
+    errorMsg: {
+      color: "red",
+      marginLeft: moderateScale(30),
+    },
+  });
 
   // Show the toast when navigated to this page from SignUp
   useEffect(() => {
@@ -67,13 +105,18 @@ const LoginForCompany = () => {
         };
 
         await AsyncStorage.setItem("user", JSON.stringify(storedData));
+
+        // Navigate based on user role
         if (userData.role === "Recruiter") {
           navigation.reset({
             index: 0,
-            routes: [{ name: "DashboardForCompany" }],
+            routes: [{ name: "JobPostingNavigator" }],
           });
         } else {
-          navigation.navigate("Main");
+          navigation.reset({
+            index: 0,
+            routes: [{ name: "Main" }],
+          });
         }
       } else {
         Alert.alert("Error", "User data not found");
@@ -147,37 +190,3 @@ const LoginForCompany = () => {
 };
 
 export default LoginForCompany;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: BG_COLOR,
-  },
-  logo: {
-    width: scale(70),
-    height: scale(70),
-    alignSelf: "center",
-    marginTop: moderateVerticalScale(70),
-    borderRadius: moderateScale(7),
-  },
-  title: {
-    alignSelf: "center",
-    fontSize: moderateScale(25),
-    marginTop: moderateVerticalScale(50),
-    fontWeight: "600",
-  },
-  forgotPasswordContainer: {
-    alignSelf: "flex-end",
-    marginRight: moderateScale(20),
-    marginTop: moderateScale(13),
-  },
-  forgotPasswordText: {
-    fontWeight: "500",
-    fontSize: moderateScale(14),
-    textDecorationLine: "underline",
-  },
-  errorMsg: {
-    color: "red",
-    marginLeft: moderateScale(30),
-  },
-});

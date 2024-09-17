@@ -16,7 +16,7 @@ import {
 import CustomText from "../utils/CustomText";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { getColors } from "../utils/colors";
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "../utils/ThemeContext";
 
 const CustomDropdown = ({ title, placeholder, value, error, onSelect }) => {
   const { theme } = useTheme(); // Access theme

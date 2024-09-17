@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from "react";
-import { View, StyleSheet } from "react-native";
+import React, { useEffect, useState, useRef, useCallback } from "react";
+import { View, StyleSheet, ScrollView, RefreshControl } from "react-native";
 import MainNavigator from "./src/navigation/MainNavigator";
 import Toast from "react-native-toast-message";
 import * as SplashScreen from "expo-splash-screen";
@@ -27,9 +27,8 @@ const App = () => {
   });
 
   const [appIsReady, setAppIsReady] = useState(false);
-  const navigationRef = useRef(null);
-  const [counter, setCounter] = useState(0);
-  // Always call hooks at the top level, unconditionally
+  const [refreshing, setRefreshing] = useState(false); // State for RefreshControl
+  const [key, setKey] = useState(0); // Key to force re-render
 
   useEffect(() => {
     const prepareApp = async () => {
@@ -38,34 +37,46 @@ const App = () => {
         await SplashScreen.hideAsync();
       } catch (error) {
         console.warn(error);
-
         await SplashScreen.hideAsync();
       }
     };
 
-    // Only run the effect if fonts are loaded
-    if (fontsLoaded && counter < 2) {
+    if (fontsLoaded) {
       prepareApp();
-      setCounter((prevCounter) => prevCounter + 1);
     }
-  }, [fontsLoaded, counter]); // Depend on fontsLoaded
+  }, [fontsLoaded]);
 
-  // If the app is not ready, show a loader
+  // Function to handle the pull-to-refresh logic
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+
+    // Force a re-render by updating the key
+    setKey((prevKey) => prevKey + 1);
+
+    setRefreshing(false);
+  }, []);
+
   if (!appIsReady) {
     return <Loader />;
   }
 
-  // Once the app is ready, render the main content
   return (
     <View style={styles.container}>
-      <NavigationContainer ref={navigationRef}>
-        <ThemeContextProvider>
-          <AuthProvider>
-            <MainNavigator />
-            <Toast />
-          </AuthProvider>
-        </ThemeContextProvider>
-      </NavigationContainer>
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        <NavigationContainer key={key}>
+          <ThemeContextProvider>
+            <AuthProvider>
+              <MainNavigator />
+              <Toast />
+            </AuthProvider>
+          </ThemeContextProvider>
+        </NavigationContainer>
+      </ScrollView>
     </View>
   );
 };

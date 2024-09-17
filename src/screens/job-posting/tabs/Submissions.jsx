@@ -148,7 +148,6 @@ const Submissions = () => {
 
   return (
     <View style={styles.container}>
-      {loading && <Loader />}
       <View style={styles.header}>
         <Text style={styles.headerText}>Job submission</Text>
       </View>

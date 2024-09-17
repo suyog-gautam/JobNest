@@ -40,8 +40,10 @@ const Profile = () => {
     headerText: {
       fontSize: moderateScale(26),
       fontWeight: "700",
+      alignSelf: "center",
       fontFamily: "Poppins_600Bold",
       color: TEXT_COLOR,
+      marginBottom: verticalScale(10),
     },
     profileSection: {
       justifyContent: "center",
@@ -139,10 +141,8 @@ const Profile = () => {
             try {
               await AsyncStorage.removeItem("user");
               alert("Logged out successfully");
-              navigation.reset({
-                index: 0,
-                routes: [{ name: "SelectUser" }],
-              });
+
+              navigation.navigate("SelectUser");
             } catch (error) {
               console.error("Error logging out: ", error);
             }
@@ -155,7 +155,6 @@ const Profile = () => {
   };
   return (
     <View>
-      {loading && <Loader />}
       {!user ? (
         <NoLogin
           heading="Manage Your Profile"

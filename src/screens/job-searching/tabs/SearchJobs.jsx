@@ -12,30 +12,40 @@ import {
   scale,
   moderateVerticalScale,
   moderateScale,
+  verticalScale,
 } from "react-native-size-matters";
 import { getColors } from "../../../utils/colors";
 import { useTheme } from "../../../utils/ThemeContext";
-import { collection, onSnapshot, doc, getDoc } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
 import { firestore } from "../../../../firebaseConfig"; // Adjust the import according to your setup
-import { Ionicons, MaterialIcons, FontAwesome } from "@expo/vector-icons";
-import { formatDistanceToNow } from "date-fns";
 import CustomText from "../../../utils/CustomText";
 import { UseAuth } from "../../../utils/AuthContext";
 
-const SearchJobs = () => {
+const SearchCandidates = () => {
   const { theme } = useTheme(); // Access theme
   const { BG_COLOR, TEXT_COLOR } = getColors(theme);
   const { user } = UseAuth();
   const [searchText, setSearchText] = useState("");
-  const [allJobs, setAllJobs] = useState([]);
-  const [filteredJobs, setFilteredJobs] = useState([]);
-  const [savedJobIds, setSavedJobIds] = useState([]); // Holds an array of saved job IDs
+  const [allUsers, setAllUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
   const navigation = useNavigation();
   const styles = StyleSheet.create({
     container: {
       flex: 1,
+      marginTop: verticalScale(15),
+      marginBottom: verticalScale(10),
       backgroundColor: BG_COLOR,
+    },
+    header: {
+      marginTop: verticalScale(10),
+      alignItems: "center",
+    },
+    headerText: {
+      fontSize: moderateScale(22),
+      fontWeight: "700",
+      fontFamily: "Poppins_600Bold",
+      color: TEXT_COLOR,
     },
     searchBox: {
       flexDirection: "row",
@@ -62,155 +72,53 @@ const SearchJobs = () => {
       color: TEXT_COLOR,
       marginLeft: scale(10),
     },
-    jobItem: {
+    userItem: {
       padding: moderateScale(16),
-      backgroundColor: BG_COLOR,
-      margin: moderateScale(8),
-      borderRadius: moderateScale(8),
-      borderWidth: 1,
-      borderColor: "#ddd",
+      borderBottomWidth: 1,
+      borderBottomColor: "#ddd",
     },
-    header: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-    },
-    bookmark: {
-      height: scale(18),
-      width: scale(18),
-      tintColor: TEXT_COLOR,
-    },
-    jobTitle: {
-      color: TEXT_COLOR,
+    userName: {
       fontSize: moderateScale(16),
-      fontFamily: "Poppins_700Bold",
-    },
-    companyName: {
-      fontSize: moderateScale(14),
       color: TEXT_COLOR,
-    },
-    details: {
-      marginTop: moderateScale(4),
-    },
-    detailsRow: {
-      flexDirection: "row",
-      alignItems: "center",
-      marginBottom: moderateScale(8),
-    },
-    icon: {
-      marginRight: scale(4),
-      tintColor: "#8a7c72",
-    },
-    detailText: {
-      fontFamily: "Poppins_400Regular",
-      fontSize: moderateScale(12),
-      color: "#8a7c72",
-      marginRight: scale(16),
-    },
-    description: {
-      fontFamily: "Poppins_400Regular",
-      fontSize: moderateScale(12),
-      color: "#8a7c72",
-      marginBottom: moderateScale(8),
-    },
-    skillsContainer: {
-      flexDirection: "row",
-      flexWrap: "wrap",
-      marginBottom: moderateScale(8),
-    },
-    skill: {
-      fontFamily: "Poppins_400Regular",
-      fontSize: moderateScale(12),
-      color: "#2196F3",
-      marginRight: scale(8),
-    },
-    footer: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-      marginTop: moderateScale(2),
-    },
-    timePosted: {
-      fontFamily: "Poppins_400Regular",
-      fontSize: moderateScale(12),
-      color: "#8a7c72",
-    },
-    saveText: {
-      fontSize: moderateScale(12),
-      color: "#2196F3",
     },
     noResults: {
-      fontFamily: "Poppins_400Regular",
       textAlign: "center",
       marginTop: moderateScale(20),
       fontSize: moderateScale(16),
-      color: TEXT_COLOR,
+      color: "gray",
     },
   });
   useEffect(() => {
-    const fetchAllJobs = async () => {
-      const jobsCollectionRef = collection(firestore, "jobs");
+    const fetchAllUsers = async () => {
+      const usersCollectionRef = collection(firestore, "users");
 
-      const unsubscribe = onSnapshot(jobsCollectionRef, (querySnapshot) => {
-        const jobsList = [];
+      const unsubscribe = onSnapshot(usersCollectionRef, (querySnapshot) => {
+        const usersList = [];
         querySnapshot.forEach((doc) => {
-          const userJobs = doc.data().jobs || [];
-          jobsList.push(...userJobs);
+          usersList.push(doc.data());
         });
-        setAllJobs(jobsList);
+        setAllUsers(usersList);
+        setFilteredUsers(usersList); // Initialize filteredUsers with allUsers
       });
 
       return () => unsubscribe();
     };
 
-    fetchAllJobs();
+    fetchAllUsers();
   }, []);
 
   useEffect(() => {
-    if (user) {
-      const fetchSavedJobs = async () => {
-        try {
-          const savedJobsDocRef = doc(firestore, "savedJobs", user.user.uid);
-          const savedJobsDoc = await getDoc(savedJobsDocRef);
-
-          if (savedJobsDoc.exists()) {
-            const savedJobsData = savedJobsDoc.data().jobs || [];
-
-            setSavedJobIds(savedJobsData);
-          } else {
-            console.log("No saved jobs document found.");
-            setSavedJobIds([]);
-          }
-        } catch (error) {
-          console.error("Error fetching saved jobs:", error);
-        }
-      };
-
-      fetchSavedJobs();
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (searchText.trim() === "") {
-      setFilteredJobs([]);
-    } else {
-      const filtered = allJobs.filter(
-        (job) =>
-          job.jobTitle?.toLowerCase().includes(searchText.toLowerCase()) ||
-          job.company?.toLowerCase().includes(searchText.toLowerCase()) ||
-          job.skills?.toLowerCase().includes(searchText.toLowerCase()) ||
-          job.package?.toLowerCase().includes(searchText.toLowerCase()) ||
-          job.experience?.toLowerCase().includes(searchText.toLowerCase())
-      );
-      setFilteredJobs(filtered);
-    }
-  }, [searchText, allJobs]);
-
-  const handleJobPress = (job) => {
-    navigation.navigate("SingleJob", { job });
-  };
+    const filtered = allUsers.filter((user) =>
+      user.name.toLowerCase().includes(searchText.toLowerCase())
+    );
+    setFilteredUsers(filtered);
+  }, [searchText, allUsers]);
 
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Search Candidates</Text>
+      </View>
       <View style={styles.searchBox}>
         <Image
           source={require("../../../images/search.png")}
@@ -218,7 +126,7 @@ const SearchJobs = () => {
         />
         <TextInput
           style={styles.searchText}
-          placeholder="Search for Jobs"
+          placeholder="Search for candidates"
           placeholderTextColor="grey"
           value={searchText}
           onChangeText={setSearchText}
@@ -230,89 +138,20 @@ const SearchJobs = () => {
           />
         </TouchableOpacity>
       </View>
-
       <FlatList
-        style={{ marginTop: moderateVerticalScale(10) }}
-        data={filteredJobs}
-        keyExtractor={(item) => item.jobId}
-        renderItem={({ item }) => {
-          const postedDate = new Date(item?.postedOn);
-          const formattedTime = isNaN(postedDate)
-            ? "Invalid Date"
-            : formatDistanceToNow(postedDate, { addSuffix: true });
-
-          const isJobSaved = savedJobIds.includes(item.jobId);
-
-          return (
-            <TouchableOpacity onPress={() => handleJobPress(item)}>
-              <View style={styles.jobItem}>
-                <View style={styles.header}>
-                  <CustomText style={styles.jobTitle}>
-                    {item.jobTitle}
-                  </CustomText>
-
-                  <Image
-                    source={
-                      isJobSaved
-                        ? require("../../../images/bookmarkfiiled.png")
-                        : require("../../../images/bookmark.png")
-                    }
-                    style={styles.bookmark}
-                  />
-                </View>
-                <CustomText style={styles.companyName}>
-                  {item.company}
-                </CustomText>
-                <View style={styles.details}>
-                  <View style={styles.detailsRow}>
-                    <MaterialIcons
-                      name="work"
-                      size={16}
-                      color="grey"
-                      style={styles.icon}
-                    />
-                    <Text style={styles.detailText}>
-                      {item.experience} Years
-                    </Text>
-                    <FontAwesome
-                      name="money"
-                      size={16}
-                      color="grey"
-                      style={styles.icon}
-                    />
-                    <Text style={styles.detailText}>₹ {item.package}</Text>
-                    <Ionicons
-                      name="location-sharp"
-                      size={16}
-                      color="grey"
-                      style={styles.icon}
-                    />
-                    <Text style={styles.detailText}>{item.address}</Text>
-                  </View>
-                  <View style={styles.skillsContainer}>
-                    {item.skills.split(",").map((skill, index) => (
-                      <Text key={index} style={styles.skill}>
-                        {skill.trim()}
-                      </Text>
-                    ))}
-                  </View>
-                  <Text style={styles.description}>
-                    {item.jobDescription.slice(0, 50)}...
-                  </Text>
-                </View>
-                <View style={styles.footer}>
-                  <Text style={styles.timePosted}>{formattedTime}</Text>
-                </View>
-              </View>
-            </TouchableOpacity>
-          );
-        }}
+        data={filteredUsers}
+        keyExtractor={(item) => item.jobId} // Adjust this according to your user data
+        renderItem={({ item }) => (
+          <TouchableOpacity style={styles.userItem}>
+            <CustomText style={styles.userName}>{item.name}</CustomText>
+          </TouchableOpacity>
+        )}
         ListEmptyComponent={() => (
-          <Text style={styles.noResults}>No jobs found</Text>
+          <Text style={styles.noResults}>No candidates found</Text>
         )}
       />
     </View>
   );
 };
 
-export default SearchJobs;
+export default SearchCandidates;
