@@ -1,5 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { View, Image, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  Modal,
+  TextInput,
+} from "react-native";
 import Toast from "react-native-toast-message";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -7,6 +15,7 @@ import {
   scale,
   moderateScale,
   moderateVerticalScale,
+  verticalScale,
 } from "react-native-size-matters";
 import { getColors } from "../../utils/colors";
 import { useTheme } from "../../utils/ThemeContext";
@@ -17,15 +26,19 @@ import CustomBorderBtn from "../../components/CustomBorderBtn";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import auth from "@react-native-firebase/auth";
-import AsyncStorage from "@react-native-async-storage/async-storage"; // Added import for AsyncStorage
-import Loader from "../../utils/Loader"; // Added import for Loader
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Loader from "../../utils/Loader";
 import firestore from "@react-native-firebase/firestore";
+
 const LoginForCompany = () => {
-  const { theme } = useTheme(); // Access theme
+  const { theme } = useTheme();
   const { BG_COLOR, TEXT_COLOR } = getColors(theme);
   const [loading, setLoading] = useState(false);
+  const [forgotPasswordVisible, setForgotPasswordVisible] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
   const navigation = useNavigation();
   const route = useRoute();
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -59,6 +72,80 @@ const LoginForCompany = () => {
     errorMsg: {
       color: "red",
       marginLeft: moderateScale(30),
+    },
+    modalContainer: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+    },
+    modalContent: {
+      backgroundColor: BG_COLOR,
+      padding: moderateScale(20),
+      borderRadius: moderateScale(10),
+      width: "80%",
+    },
+    modalHeader: {
+      flexDirection: "row",
+      justifyContent: "space-between", // Distributes space between the title and cross icon
+      alignItems: "center", // Aligns items vertically in the center
+      width: "100%", // Takes up the full width of the modal
+      paddingHorizontal: moderateScale(10), // Add some padding to give space around the elements
+      marginBottom: moderateVerticalScale(10),
+    },
+    modalTitle: {
+      fontSize: moderateScale(20),
+      fontWeight: "bold",
+      color: TEXT_COLOR,
+      textAlign: "center", // Center text horizontally
+      flex: 1, // Takes up available space to keep it centered
+    },
+    inputContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      width: "90%",
+      height: verticalScale(40),
+      borderWidth: 0.5,
+      alignSelf: "center",
+      marginTop: moderateVerticalScale(9),
+      marginBottom: moderateVerticalScale(9),
+      borderRadius: scale(10),
+      paddingLeft: moderateScale(12),
+      paddingRight: moderateScale(12),
+
+      borderColor: TEXT_COLOR,
+    },
+    inputText: {
+      flex: 1,
+      textAlign: "left",
+      marginRight: moderateScale(15),
+      marginLeft: moderateScale(5),
+      fontSize: moderateScale(13),
+      fontFamily: "Poppins_400Regular",
+      color: TEXT_COLOR,
+    },
+    Btn: {
+      width: "60%",
+      borderWidth: 1,
+      height: verticalScale(40),
+      backgroundColor: TEXT_COLOR,
+      justifyContent: "center",
+      borderColor: TEXT_COLOR,
+      borderRadius: moderateVerticalScale(12),
+      marginTop: moderateVerticalScale(10),
+      alignSelf: "center",
+      marginBottom: moderateVerticalScale(50),
+    },
+    btnText: {
+      color: BG_COLOR,
+      fontSize: moderateScale(16),
+      alignSelf: "center",
+      fontWeight: "600",
+    },
+    crossIcon: {
+      tintColor: TEXT_COLOR,
+      width: scale(20),
+      height: scale(20),
     },
   });
 
@@ -128,6 +215,20 @@ const LoginForCompany = () => {
     }
   };
 
+  const handleForgotPassword = async () => {
+    if (!forgotEmail) {
+      Alert.alert("Error", "Please enter your email");
+      return;
+    }
+    try {
+      await auth().sendPasswordResetEmail(forgotEmail);
+      Alert.alert("Success", "Password reset email sent");
+      setForgotPasswordVisible(false); // Close the modal
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Toast />
@@ -171,7 +272,10 @@ const LoginForCompany = () => {
             {touched.password && errors.password ? (
               <CustomText style={styles.errorMsg}>{errors.password}</CustomText>
             ) : null}
-            <TouchableOpacity style={styles.forgotPasswordContainer}>
+            <TouchableOpacity
+              style={styles.forgotPasswordContainer}
+              onPress={() => setForgotPasswordVisible(true)} // Show the forgot password modal
+            >
               <CustomText style={styles.forgotPasswordText}>
                 Forgot Password?
               </CustomText>
@@ -184,7 +288,46 @@ const LoginForCompany = () => {
           </>
         )}
       </Formik>
+
       {loading && <Loader />}
+
+      {/* Forgot Password Modal */}
+      <Modal
+        transparent={true}
+        animationType="slide"
+        visible={forgotPasswordVisible}
+        onRequestClose={() => setForgotPasswordVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <CustomText style={styles.modalTitle}>Reset Password</CustomText>
+              <TouchableOpacity onPress={() => setForgotPasswordVisible(false)}>
+                <Image
+                  source={require("../../images/cross.png")}
+                  style={styles.crossIcon}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.inputContainer}>
+              <TextInput
+                placeholder="Enter Your Email"
+                style={styles.inputText}
+                placeholderTextColor="grey"
+                value={forgotEmail}
+                onChangeText={setForgotEmail}
+                keyboardType="email-address"
+              />
+            </View>
+            <TouchableOpacity
+              style={styles.Btn}
+              onPress={() => handleForgotPassword()}
+            >
+              <CustomText style={styles.btnText}> Send Reset Email </CustomText>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };

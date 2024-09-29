@@ -380,104 +380,172 @@ const Home = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.searchBox}
-        onPress={() => {
-          navigation.navigate("SearchJobs");
-        }}
-      >
-        <Image
-          source={require("../../../images/search.png")}
-          style={styles.searchIcon}
-        />
-        <CustomText style={styles.searchText}>Search for Jobs</CustomText>
-      </TouchableOpacity>
+      {!user && (
+        <>
+          <CustomText style={styles.headerText}>
+            {"You are one step away from getting Job"}
+          </CustomText>
+          <View style={styles.notes}>
+            <Image
+              source={require("../../../images/star.png")}
+              style={styles.searchIcon}
+            />
+            <CustomText style={styles.noteText}>
+              {"Get Jobs after creating account"}
+            </CustomText>
+          </View>
+          <View style={styles.notes}>
+            <Image
+              source={require("../../../images/star.png")}
+              style={styles.searchIcon}
+            />
+            <CustomText style={styles.noteText}>
+              {"Chat with Employers and get hired"}
+            </CustomText>
+          </View>
+          <View style={styles.buttonView}>
+            <TouchableOpacity
+              style={styles.loginBtn}
+              onPress={() => {
+                navigation.navigate("LoginForUsers");
+              }}
+            >
+              <CustomText style={styles.loginTxt}>Login</CustomText>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.signupBtn}
+              onPress={() => {
+                navigation.navigate("SignupForUsers");
+              }}
+            >
+              <CustomText style={styles.signupTxt}>Register</CustomText>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.jobsearchCard}>
+            <Image
+              source={require("../../../images/search1.gif")}
+              style={styles.gif}
+            />
+            <TextInput
+              placeholder="Enter Job Title"
+              style={styles.input}
+              placeholderTextColor="gray"
+              editable={false}
+            />
+            <TextInput
+              placeholder="Enter Job Type"
+              placeholderTextColor="gray"
+              style={styles.input}
+              editable={false}
+            />
+            <TouchableOpacity style={styles.searchBtn}>
+              <CustomText style={styles.searchBtnText}>Search Jobs</CustomText>
+            </TouchableOpacity>
+          </View>
+        </>
+      )}
       {user && (
-        <View style={styles.trendingContainer}>
-          <CustomText style={styles.trendingText}>Available Jobs</CustomText>
-          {loading ? (
-            <Loader />
-          ) : trendingJobs.length > 0 ? (
-            <>
-              <FlatList
-                style={{ marginTop: moderateVerticalScale(10) }}
-                data={trendingJobs}
-                keyExtractor={(item) => item.jobId}
-                renderItem={({ item }) => {
-                  const postedDate = new Date(item?.postedOn);
-                  const formattedTime = isNaN(postedDate)
-                    ? "Invalid Date"
-                    : formatDistanceToNow(postedDate, { addSuffix: true });
+        <>
+          <TouchableOpacity
+            style={styles.searchBox}
+            onPress={() => {
+              navigation.navigate("SearchJobs");
+            }}
+          >
+            <Image
+              source={require("../../../images/search.png")}
+              style={styles.searchIcon}
+            />
+            <CustomText style={styles.searchText}>Search for Jobs</CustomText>
+          </TouchableOpacity>
+          <View style={styles.trendingContainer}>
+            <CustomText style={styles.trendingText}>Available Jobs</CustomText>
+            {loading ? (
+              <Loader />
+            ) : trendingJobs.length > 0 ? (
+              <>
+                <FlatList
+                  style={{ marginTop: moderateVerticalScale(10) }}
+                  data={trendingJobs}
+                  keyExtractor={(item) => item.jobId}
+                  renderItem={({ item }) => {
+                    const postedDate = new Date(item?.postedOn);
+                    const formattedTime = isNaN(postedDate)
+                      ? "Invalid Date"
+                      : formatDistanceToNow(postedDate, { addSuffix: true });
 
-                  return (
-                    <TouchableOpacity onPress={() => handleJobPress(item)}>
-                      <View style={styles.jobItem}>
-                        <View style={styles.header}>
-                          <CustomText style={styles.jobTitle}>
-                            {item.jobTitle}
+                    return (
+                      <TouchableOpacity onPress={() => handleJobPress(item)}>
+                        <View style={styles.jobItem}>
+                          <View style={styles.header}>
+                            <CustomText style={styles.jobTitle}>
+                              {item.jobTitle}
+                            </CustomText>
+                          </View>
+                          <CustomText style={styles.companyName}>
+                            {item.company}
                           </CustomText>
-                        </View>
-                        <CustomText style={styles.companyName}>
-                          {item.company}
-                        </CustomText>
-                        <View style={styles.details}>
-                          <View style={styles.detailsRow}>
-                            <MaterialIcons
-                              name="work"
-                              size={16}
-                              color="grey"
-                              style={styles.icon}
-                            />
-                            <Text style={styles.detailText}>
-                              {item.experience} Years
-                            </Text>
-                            <FontAwesome
-                              name="money"
-                              size={16}
-                              color="grey"
-                              style={styles.icon}
-                            />
-                            <Text style={styles.detailText}>
-                              ₹ {item.package}
-                            </Text>
-                            <Ionicons
-                              name="location-sharp"
-                              size={16}
-                              color="grey"
-                              style={styles.icon}
-                            />
-                            <Text style={styles.detailText}>
-                              {item.address}
-                            </Text>
-                          </View>
-                          <View style={styles.skillsContainer}>
-                            {item.skills.split(",").map((skill, index) => (
-                              <Text key={index} style={styles.skill}>
-                                {skill.trim()}
+                          <View style={styles.details}>
+                            <View style={styles.detailsRow}>
+                              <MaterialIcons
+                                name="work"
+                                size={16}
+                                color="grey"
+                                style={styles.icon}
+                              />
+                              <Text style={styles.detailText}>
+                                {item.experience} Years
                               </Text>
-                            ))}
+                              <FontAwesome
+                                name="money"
+                                size={16}
+                                color="grey"
+                                style={styles.icon}
+                              />
+                              <Text style={styles.detailText}>
+                                ₹ {item.package}
+                              </Text>
+                              <Ionicons
+                                name="location-sharp"
+                                size={16}
+                                color="grey"
+                                style={styles.icon}
+                              />
+                              <Text style={styles.detailText}>
+                                {item.address}
+                              </Text>
+                            </View>
+                            <View style={styles.skillsContainer}>
+                              {item.skills.split(",").map((skill, index) => (
+                                <Text key={index} style={styles.skill}>
+                                  {skill.trim()}
+                                </Text>
+                              ))}
+                            </View>
+                            <Text style={styles.description}>
+                              {item.jobDescription.slice(0, 50)}...
+                            </Text>
                           </View>
-                          <Text style={styles.description}>
-                            {item.jobDescription.slice(0, 50)}...
-                          </Text>
+                          <View style={styles.footer}>
+                            <Text style={styles.timePosted}>
+                              {formattedTime}
+                            </Text>
+                          </View>
                         </View>
-                        <View style={styles.footer}>
-                          <Text style={styles.timePosted}>{formattedTime}</Text>
-                        </View>
-                      </View>
-                    </TouchableOpacity>
-                  );
-                }}
-                ListEmptyComponent={() => (
-                  <Text style={styles.noResults}>No trending jobs found</Text>
-                )}
-                ListFooterComponent={renderPagination}
-              />
-            </>
-          ) : (
-            <Text style={styles.noResults}>No trending jobs found</Text>
-          )}
-        </View>
+                      </TouchableOpacity>
+                    );
+                  }}
+                  ListEmptyComponent={() => (
+                    <Text style={styles.noResults}>No trending jobs found</Text>
+                  )}
+                  ListFooterComponent={renderPagination}
+                />
+              </>
+            ) : (
+              <Text style={styles.noResults}>No trending jobs found</Text>
+            )}
+          </View>
+        </>
       )}
     </View>
   );

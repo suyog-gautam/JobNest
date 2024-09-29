@@ -256,7 +256,7 @@ const MyJobs = () => {
                     Department: {item.department}
                   </Text>
                   <Text style={styles.jobDetails}>
-                    Experience: {item.experience}
+                    Experience: {item.experience} years
                   </Text>
                   <Text style={styles.jobDetails}>Package: {item.package}</Text>
                   <View style={styles.tagsContainer}>

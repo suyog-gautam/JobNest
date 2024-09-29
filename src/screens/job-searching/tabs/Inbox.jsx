@@ -12,6 +12,7 @@ import {
   moderateVerticalScale,
   moderateScale,
 } from "react-native-size-matters";
+import NoLogin from "../../../components/NoLogin";
 import { getColors } from "../../../utils/colors";
 import { useTheme } from "../../../utils/ThemeContext";
 import { useNavigation } from "@react-navigation/native";

@@ -103,10 +103,14 @@ const SearchCandidates = () => {
       const unsubscribe = onSnapshot(usersCollectionRef, (querySnapshot) => {
         const usersList = [];
         querySnapshot.forEach((doc) => {
-          usersList.push(doc.data());
+          const userData = doc.data();
+          // Check if the user's role is 'Candidate'
+          if (userData.role === "Candidate") {
+            usersList.push(userData);
+          }
         });
         setAllUsers(usersList);
-        setFilteredUsers(usersList); // Initialize filteredUsers with allUsers
+        setFilteredUsers(usersList); // Initialize filteredUsers with allUsers having role 'Candidate'
       });
 
       return () => unsubscribe();

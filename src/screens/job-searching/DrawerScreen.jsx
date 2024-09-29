@@ -42,15 +42,30 @@ const DrawerScreen = () => {
       height: scale(25),
       tintColor: TEXT_COLOR,
     },
+    visible: {
+      opacity: 1,
+      height: "100%",
+    },
+    hidden: {
+      opacity: 0,
+      height: 0,
+    },
   });
   const handleTabPress = (tab) => {
     setSelectedTab(tab);
   };
   return (
     <View style={styles.container}>
-      {selectedTab === "home" && <Home />}
-      {selectedTab === "send" && <Apply />}
-      {selectedTab === "chat" && <Inbox />}
+      <View style={[selectedTab === "home" ? styles.visible : styles.hidden]}>
+        <Home />
+      </View>
+      <View style={[selectedTab === "send" ? styles.visible : styles.hidden]}>
+        <Apply />
+      </View>
+
+      <View style={{ display: selectedTab === "chat" ? "flex" : "none" }}>
+        <Inbox />
+      </View>
       <View style={{ display: selectedTab === "profile" ? "flex" : "none" }}>
         <Profile />
       </View>

@@ -86,6 +86,7 @@ const CustomTextInput = ({
       <TextInput
         style={[styles.inputText, { flexGrow: 1 }]}
         placeholder={placeholder}
+        placeholderTextColor="#a8a8a8"
         secureTextEntry={secureTextEntry}
         value={value}
         onChangeText={onChangeText}
